@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Artículo — Blog Simple</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --navy:#0F2336;--blue:#7A97AB;--sage:#A3A983;--sage-dk:#7A7E5E;--sage-lt:#C5C7A5;
+  --white:#fff;--gray-50:#F7F8FA;--gray-100:#F0F2F5;--gray-200:#E4E7EC;
+  --gray-400:#9AA5B4;--gray-600:#4A5568;--text:#0F2336;--text-md:#374151;
+  --text-sm:#6B7280;--border:#E5E7EB;--radius:10px;--radius-lg:16px;--radius-xl:24px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}ul{list-style:none}button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* NAV */
+.nav{position:fixed;inset:0 0 auto 0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
+.nav-logo{display:flex;align-items:center;gap:8px}
+.nav-wordmark{font-size:20px;font-weight:300;color:var(--navy);letter-spacing:-0.3px}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-item{position:relative}
+.nav-link{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:500;color:var(--text-md);padding:8px 12px;border-radius:8px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-link:hover{color:var(--text);background:var(--gray-50)}
+.nav-chevron{transition:transform .2s;color:var(--gray-400)}
+.nav-drop-btn{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:500;color:var(--text-md);padding:8px 12px;border-radius:8px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-drop-btn:hover,.nav-drop-btn.open{color:var(--text);background:var(--gray-50)}
+.nav-drop-btn.open .nav-chevron{transform:rotate(180deg)}
+.nav-dropdown{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(-4px);min-width:210px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:6px;box-shadow:0 20px 48px rgba(0,0,0,.1);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:300}
+.nav-dropdown.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.drop-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;transition:background .12s;cursor:pointer}
+.drop-item:hover{background:var(--gray-50)}
+.drop-icon{width:32px;height:32px;border-radius:8px;background:var(--gray-100);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.drop-label{font-size:13px;font-weight:600;color:var(--text)}
+.drop-sub{font-size:11px;color:var(--text-sm);margin-top:1px}
+.nav-right{display:flex;align-items:center;gap:8px}
+.btn-nav-primary{font-size:13px;font-weight:600;color:#fff;padding:10px 20px;border-radius:var(--radius);background:var(--navy);transition:background .15s}
+.btn-nav-primary:hover{background:#0a1a28}
+.nav-ham{display:none;flex-direction:column;gap:5px;width:32px;padding:6px 4px}
+.nav-ham span{display:block;height:1.5px;background:var(--text);border-radius:2px;transition:all .2s}
+.nav-ham.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.nav-ham.open span:nth-child(2){opacity:0}
+.nav-ham.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:#fff;z-index:190;padding:20px 24px;flex-direction:column;gap:2px;overflow-y:auto;border-top:1px solid var(--border)}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:15px;font-weight:500;color:var(--text);padding:13px 0;border-bottom:1px solid var(--border)}
+.mob-sub{font-size:14px!important;font-weight:400!important;color:var(--text-sm)!important;padding-left:16px!important}
+.mob-group-h{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-400);padding:16px 0 4px}
+.mob-cta{margin-top:20px;background:var(--navy)!important;color:#fff!important;text-align:center;border-radius:var(--radius)!important;padding:14px!important;border:none!important;font-weight:600!important}
+
+/* LAYOUT */
+.container{max-width:1140px;margin:0 auto;padding:0 48px}
+.section{padding:80px 0}
+.bg-gray{background:var(--gray-50)}
+.bg-navy{background:var(--navy)}
+
+/* TYPOGRAPHY */
+.t-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage-dk);display:flex;align-items:center;gap:8px}
+.t-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--sage)}
+.t-h1{font-size:clamp(36px,5vw,60px);font-weight:800;line-height:1.06;letter-spacing:-1.5px;color:var(--text)}
+.t-h2{font-size:clamp(26px,3.2vw,40px);font-weight:800;line-height:1.1;letter-spacing:-1px;color:var(--text)}
+.t-h3{font-size:20px;font-weight:700;letter-spacing:-0.3px;color:var(--text)}
+.t-body{font-size:16px;line-height:1.72;color:var(--text-md);font-weight:400}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:13px 26px;border-radius:var(--radius);font-size:14px;font-weight:600;border:none;transition:all .15s}
+.btn-primary:hover{background:#0a1a28;transform:translateY(-1px);box-shadow:0 8px 24px rgba(15,35,54,.18)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--text);padding:13px 26px;border-radius:var(--radius);font-size:14px;font-weight:600;border:1.5px solid var(--border);transition:all .15s}
+.btn-secondary:hover{border-color:var(--gray-400);background:var(--gray-50)}
+
+/* FOOTER minimal */
+footer{background:var(--navy);padding:40px 0 28px}
+.ft-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.ft-name{font-size:18px;font-weight:300;color:#fff;letter-spacing:-0.3px}
+.ft-links{display:flex;gap:24px}
+.ft-links a{font-size:13px;color:rgba(255,255,255,.35);transition:color .15s}
+.ft-links a:hover{color:rgba(255,255,255,.7)}
+.ft-copy{font-size:12px;color:rgba(255,255,255,.18);margin-top:20px}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.rv.in{opacity:1;transform:none}
+
+/* HERO PAGE */
+.page-hero{padding:120px 0 72px;border-bottom:1px solid var(--border)}
+.page-hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.page-hero-media{border-radius:var(--radius-xl);overflow:hidden;aspect-ratio:4/3;background:var(--gray-100);position:relative}
+
+/* PLACEHOLDER styles */
+.placeholder-box{background:var(--gray-100);border:2px dashed var(--gray-200);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;color:var(--gray-400);font-size:13px;font-weight:500;text-align:center;padding:24px}
+
+@media(max-width:960px){
+  .nav{padding:0 24px}
+  .nav-links{display:none}
+  .nav-ham{display:flex}
+  .container{padding:0 24px}
+  .section{padding:60px 0}
+  .page-hero-inner{grid-template-columns:1fr}
+}
+
+
+/* ARTICLE LAYOUT */
+.article-wrap {
+  display: grid; grid-template-columns: 1fr 300px;
+  gap: 56px; padding-top: 80px; align-items: start;
+  max-width: 1100px; margin: 0 auto; padding-left: 48px; padding-right: 48px;
+}
+
+/* BREADCRUMB */
+.breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text-sm); margin-bottom: 32px; flex-wrap:wrap;
+}
+.breadcrumb a { color: var(--text-sm); transition: color .15s; }
+.breadcrumb a:hover { color: var(--text); }
+.bc-sep { color: var(--gray-400); }
+.bc-cur { color: var(--text); font-weight:500; }
+
+/* ARTICLE HEAD */
+.art-meta { display:flex; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+.cat-badge { display:inline-flex; align-items:center; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:100px; }
+.cat-salud { background:rgba(122,151,171,.12); color:#185FA5; }
+.cat-agua  { background:rgba(163,169,131,.15); color:#3B6D11; }
+.cat-cdmx  { background:rgba(15,35,54,.08); color:#374151; }
+.cat-tips  { background:rgba(163,169,131,.1); color:var(--sage-dk); }
+.read-time { font-size:11px; color:var(--text-sm); }
+.art-date  { font-size:11px; color:var(--text-sm); }
+
+.art-h1 { font-size: clamp(28px,4vw,46px); font-weight:800; line-height:1.08; letter-spacing:-1.2px; color:var(--text); margin-bottom:16px; }
+.art-lead { font-size:17px; line-height:1.72; color:var(--text-md); margin-bottom:28px; border-bottom:1px solid var(--border); padding-bottom:28px; }
+
+/* HERO IMAGE */
+.art-hero-img {
+  border-radius: var(--radius-xl); overflow:hidden;
+  aspect-ratio: 16/7; background: linear-gradient(135deg,#1B3A52,#7A97AB);
+  margin-bottom:36px; display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:10px;
+}
+
+/* BODY */
+.art-body { font-size:16px; line-height:1.8; color:var(--text-md); }
+.art-body h2 { font-size:22px; font-weight:800; color:var(--text); letter-spacing:-0.5px; margin:36px 0 14px; }
+.art-body h3 { font-size:18px; font-weight:700; color:var(--text); letter-spacing:-0.3px; margin:28px 0 12px; }
+.art-body p  { margin-bottom:18px; }
+.art-body ul { margin:0 0 18px 20px; }
+.art-body li { margin-bottom:8px; }
+.art-body a  { color:var(--navy); text-decoration:underline; text-underline-offset:3px; }
+
+/* BLOCKQUOTE */
+.art-body blockquote {
+  border-left:3px solid var(--sage); padding:20px 24px;
+  background:rgba(163,169,131,.06); border-radius:0 var(--radius-lg) var(--radius-lg) 0;
+  margin:28px 0; font-size:17px; font-style:italic; color:var(--text);
+  line-height:1.6;
+}
+
+/* CALLOUT */
+.callout {
+  background:var(--gray-50); border:1.5px solid var(--border);
+  border-radius:var(--radius-lg); padding:20px 22px; margin:28px 0;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.callout-ico { width:32px; height:32px; border-radius:9px; background:var(--gray-100); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.callout-h { font-size:14px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.callout-p { font-size:13px; color:var(--text-sm); line-height:1.55; }
+
+/* AUTHOR BIO */
+.author-bio {
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  padding:28px 0; margin:40px 0 32px;
+  display:flex; gap:18px; align-items:flex-start;
+}
+.author-av-lg { width:56px; height:56px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.author-name-lg { font-size:16px; font-weight:700; color:var(--text); margin-bottom:3px; }
+.author-role    { font-size:12px; color:var(--text-sm); margin-bottom:8px; }
+.author-bio-txt { font-size:13px; line-height:1.6; color:var(--text-sm); }
+
+/* SHARE */
+.share-row { display:flex; align-items:center; gap:10px; margin-bottom:40px; }
+.share-lbl { font-size:13px; font-weight:600; color:var(--text); }
+.share-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 14px; border-radius:var(--radius);
+  border:1.5px solid var(--border); background:#fff;
+  font-family:'Inter',sans-serif; font-size:12px; font-weight:600; color:var(--text);
+  cursor:pointer; transition:all .15s;
+}
+.share-btn:hover { border-color:var(--navy); color:var(--navy); }
+
+/* RELATED */
+.related-h { font-size:20px; font-weight:800; color:var(--text); letter-spacing:-0.4px; margin-bottom:20px; }
+.related-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.related-card {
+  border:1.5px solid var(--border); border-radius:var(--radius-lg);
+  overflow:hidden; transition:border-color .2s;
+}
+.related-card:hover { border-color:var(--navy); }
+.related-img { aspect-ratio:16/9; background:var(--gray-100); }
+.related-body { padding:14px 12px; }
+.related-h2 { font-size:13px; font-weight:700; color:var(--text); line-height:1.4; margin-bottom:4px; }
+.related-cat { font-size:10px; color:var(--text-sm); }
+
+/* SIDEBAR */
+.sidebar { position:sticky; top:80px; display:flex; flex-direction:column; gap:16px; }
+.sidebar-card {
+  border:1.5px solid var(--border); border-radius:var(--radius-xl);
+  padding:20px 18px; background:#fff;
+}
+.sidebar-h { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-sm); margin-bottom:14px; }
+.toc-list { display:flex; flex-direction:column; gap:2px; }
+.toc-item {
+  font-size:13px; color:var(--text-sm); padding:6px 10px;
+  border-radius:8px; cursor:pointer; transition:all .15s; line-height:1.4;
+}
+.toc-item:hover { background:var(--gray-50); color:var(--text); }
+.toc-item.active { background:rgba(15,35,54,.05); color:var(--navy); font-weight:600; }
+
+.sb-nl { background:var(--navy); border-radius:var(--radius-xl); padding:20px 18px; }
+.sb-nl-h { font-size:15px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin-bottom:6px; }
+.sb-nl-p { font-size:12px; color:rgba(255,255,255,.5); margin-bottom:14px; }
+.sb-nl-input { width:100%; padding:10px 12px; border:none; border-radius:8px; font-family:'Inter',sans-serif; font-size:13px; background:rgba(255,255,255,.12); color:#fff; outline:none; margin-bottom:8px; }
+.sb-nl-input::placeholder { color:rgba(255,255,255,.35); }
+.sb-nl-btn { width:100%; padding:10px; border-radius:8px; background:var(--sage); color:#fff; border:none; font-family:'Inter',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:background .15s; }
+.sb-nl-btn:hover { background:var(--sage-dk); }
+
+.sb-cta { background:var(--gray-50); border-radius:var(--radius-xl); padding:20px 18px; border:1.5px solid var(--border); text-align:center; }
+.sb-cta-h { font-size:14px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.sb-cta-p { font-size:12px; color:var(--text-sm); margin-bottom:14px; line-height:1.5; }
+.sb-cta-btn { display:block; width:100%; padding:11px; background:var(--navy); color:#fff; border-radius:8px; font-family:'Inter',sans-serif; font-size:12px; font-weight:700; text-align:center; transition:background .15s; }
+.sb-cta-btn:hover { background:#0a1a28; }
+
+@media(max-width:960px){
+  .article-wrap { grid-template-columns:1fr; padding-left:24px; padding-right:24px; }
+  .sidebar { position:static; }
+  .related-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <a href="simple-landing.html" class="nav-logo">
+    <svg width="22" height="28" viewBox="0 0 28 36" fill="none">
+      <line x1="14" y1="3" x2="14" y2="33" stroke="#A3A983" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M13.5 7 C11 7 7.5 5.5 7.5 2.5 C7.5 0.5 9.5 -0.2 11.5 0.5 C13.2 1.2 13.5 3.5 13.5 5.5 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M13.5 22 C11 22 7.5 20.5 7.5 17.5 C7.5 15.5 9.5 14.8 11.5 15.5 C13.2 16.2 13.5 18.5 13.5 20.5 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M14.5 15 C17 15 20 13.5 20.5 10.5 C21 8.5 19.5 7.5 17.5 8 C15.8 8.5 14.5 10.5 14.5 13 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-wordmark">simple</span>
+  </a>
+  <ul class="nav-links">
+    <li class="nav-item"><a href="suscripcion.html" class="nav-link">Suscripción</a></li>
+    <li class="nav-item has-drop">
+      <button class="nav-drop-btn">Quiénes somos
+        <svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nav-dropdown">
+        <a href="ubicacion.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z" stroke="#7A97AB" stroke-width="1.2"/><circle cx="8" cy="6" r="1.5" stroke="#7A97AB" stroke-width="1.2"/></svg></div><div><div class="drop-label">Ubicación</div><div class="drop-sub">Dónde operamos</div></div></a>
+        <a href="sostenibilidad.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C5.5 4 3 6 3 9a5 5 0 0010 0c0-3-2.5-5-5-7z" stroke="#A3A983" stroke-width="1.2"/></svg></div><div><div class="drop-label">Sostenibilidad</div><div class="drop-sub">Nuestro impacto ambiental</div></div></a>
+        <a href="equipo.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="2.5" stroke="#7A97AB" stroke-width="1.2"/><path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div><div><div class="drop-label">Equipo</div><div class="drop-sub">Las personas detrás de Simple</div></div></a>
+      </div>
+    </li>
+    <li class="nav-item has-drop">
+      <button class="nav-drop-btn">Lealtad
+        <svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nav-dropdown">
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.3 2.4 1.3 4L8 10l-3.5 2.4 1.3-4L2.5 6h4z" stroke="#A3A983" stroke-width="1.2"/></svg></div><div><div class="drop-label">Embajadores</div><div class="drop-sub">Representa a Simple</div></div></a>
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="5.5" cy="6" r="2" stroke="#7A97AB" stroke-width="1.2"/><circle cx="10.5" cy="6" r="2" stroke="#7A97AB" stroke-width="1.2"/><path d="M2 13c0-1.93 1.57-3.5 3.5-3.5S9 11.07 9 13M9.5 10c1.1.35 2 1.4 2 3" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div><div><div class="drop-label">Referidos</div><div class="drop-sub">Gana por recomendar</div></div></a>
+      </div>
+    </li>
+    <li class="nav-item"><a href="#" class="nav-link">Blog</a></li>
+    <li class="nav-item has-drop">
+      <button class="nav-drop-btn">Portal clientes
+        <svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nav-dropdown">
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="1" width="9" height="14" rx="1.5" stroke="#7A97AB" stroke-width="1.2"/><path d="M6 4h4M6 7h4M6 10h2" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div><div><div class="drop-label">App Simple</div><div class="drop-sub">Monitorea tu consumo</div></div></a>
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 3.5h11a1 1 0 011 1v6a1 1 0 01-1 1H9l-1.5 2L6 11.5H2.5a1 1 0 01-1-1v-6a1 1 0 011-1z" stroke="#7A97AB" stroke-width="1.2"/></svg></div><div><div class="drop-label">Servicio al cliente</div><div class="drop-sub">Soporte 24/7</div></div></a>
+      </div>
+    </li>
+  </ul>
+  <div class="nav-right">
+    <a href="simple-landing.html#cotiza" class="btn-nav-primary">Cotizar ahora</a>
+    <button class="nav-ham" id="navHam" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="suscripcion.html">Suscripción</a>
+  <div class="mob-group-h">Quiénes somos</div>
+  <a href="ubicacion.html" class="mob-sub">Ubicación</a>
+  <a href="sostenibilidad.html" class="mob-sub">Sostenibilidad</a>
+  <a href="equipo.html" class="mob-sub">Equipo</a>
+  <div class="mob-group-h">Lealtad</div>
+  <a href="#" class="mob-sub">Embajadores</a>
+  <a href="#" class="mob-sub">Referidos</a>
+  <a href="#">Blog</a>
+  <div class="mob-group-h">Portal clientes</div>
+  <a href="#" class="mob-sub">App Simple</a>
+  <a href="#" class="mob-sub">Servicio al cliente</a>
+  <a href="simple-landing.html#cotiza" class="mob-cta">Cotizar ahora</a>
+</div>
+
+
+<div class="article-wrap">
+  <article>
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb rv">
+      <a href="simple-landing.html">Inicio</a>
+      <span class="bc-sep">/</span>
+      <a href="blog.html">Blog</a>
+      <span class="bc-sep">/</span>
+      <span class="cat-badge cat-salud" style="margin:0">Salud e hidratación</span>
+      <span class="bc-sep">/</span>
+      <span class="bc-cur">Título del artículo</span>
+    </div>
+
+    <!-- HEAD -->
+    <div class="rv">
+      <div class="art-meta">
+        <span class="cat-badge cat-salud">Salud e hidratación</span>
+        <span class="read-time">5 min de lectura</span>
+        <span class="art-date">12 Abr 2025</span>
+      </div>
+      <h1 class="art-h1">¿Cuánta agua deberías tomar al día según tu peso y actividad?</h1>
+      <p class="art-lead">La regla de los 8 vasos es un mito simplificado. La cantidad correcta depende de tu masa corporal, tu nivel de actividad y la calidad del agua que consumes. Te explicamos la fórmula real basada en evidencia científica.</p>
+    </div>
+
+    <!-- HERO IMAGE -->
+    <div class="art-hero-img rv">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="6" width="40" height="32" rx="5" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/><circle cx="16" cy="19" r="4" stroke="rgba(255,255,255,.3)" stroke-width="1.3"/><path d="M4 32l12-10 7 7 7-9 14 12" stroke="rgba(255,255,255,.3)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="font-size:12px;color:rgba(255,255,255,.3);font-weight:500">Imagen principal del artículo · 16:9 · min 1200px de ancho</span>
+    </div>
+
+    <!-- BODY -->
+    <div class="art-body rv">
+
+      <h2>El mito de los 8 vasos</h2>
+      <p><!-- PLACEHOLDER: párrafo de introducción al tema, contexto, por qué el mito existe --> La recomendación de "8 vasos de agua al día" proviene de una interpretación errónea de una guía nutricional de 1945. La realidad es que las necesidades de hidratación varían dramáticamente de persona a persona.</p>
+
+      <blockquote>"<!-- PLACEHOLDER: cita de experto invitado sobre hidratación personalizada -->"</blockquote>
+
+      <h2>La fórmula correcta según tu peso</h2>
+      <p><!-- PLACEHOLDER: explicar la fórmula basada en kg de peso corporal, nivel de actividad, clima, etc. --> La guía más aceptada por la comunidad científica es consumir entre 30 y 35 ml de agua por kilogramo de peso corporal al día en condiciones normales de actividad.</p>
+
+      <div class="callout">
+        <div class="callout-ico">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#7A97AB" stroke-width="1.2"/><path d="M8 5v4M8 11h.01" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="callout-h">Fórmula rápida</div>
+          <div class="callout-p"><!-- PLACEHOLDER: fórmula concreta, ej. "Tu peso en kg × 35 ml = tu consumo diario recomendado en ml" --> Tu peso en kg × 35 ml = consumo diario recomendado en condiciones de actividad moderada.</div>
+        </div>
+      </div>
+
+      <h2>Qué afecta tus necesidades de hidratación</h2>
+      <p><!-- PLACEHOLDER: factores que aumentan/disminuyen la necesidad de agua --></p>
+      <ul>
+        <li><!-- PLACEHOLDER: factor 1, ej. actividad física --> Nivel de actividad física: añade 500 ml por cada hora de ejercicio moderado</li>
+        <li><!-- PLACEHOLDER: factor 2 --> Clima y temperatura ambiente: en CDMX durante primavera-verano incrementa 20%</li>
+        <li><!-- PLACEHOLDER: factor 3 --> Estado de salud: embarazo, lactancia y enfermedad modifican significativamente el requerimiento</li>
+        <li><!-- PLACEHOLDER: factor 4 --> Dieta: frutas y verduras pueden proveer hasta 20% de tu hidratación diaria</li>
+      </ul>
+
+      <h2>La calidad del agua importa tanto como la cantidad</h2>
+      <p><!-- PLACEHOLDER: conectar el tema del artículo con la propuesta de Simple de forma natural y no invasiva --> Hidratarte correctamente no es solo tomar suficiente agua — es tomar agua libre de contaminantes. El agua de la red en CDMX contiene cloro residual, sedimentos y en algunas zonas niveles elevados de metales pesados que afectan tanto el sabor como tu salud a largo plazo.</p>
+
+    </div>
+
+    <!-- AUTHOR BIO -->
+    <div class="author-bio rv">
+      <div class="author-av-lg">
+        <span style="font-size:18px;font-weight:800;color:#fff"><!-- Iniciales --></span>
+      </div>
+      <div>
+        <div class="author-name-lg"><!-- PLACEHOLDER: Nombre del autor / experta invitada --></div>
+        <div class="author-role"><!-- PLACEHOLDER: cargo, especialidad, institución --></div>
+        <div class="author-bio-txt"><!-- PLACEHOLDER: bio de 2-3 líneas del autor. Experiencia relevante, por qué es autoridad en el tema, dónde pueden encontrar más de su trabajo. --></div>
+      </div>
+    </div>
+
+    <!-- SHARE -->
+    <div class="share-row rv">
+      <span class="share-lbl">Compartir</span>
+      <button class="share-btn" onclick="copyLink(this)">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M5 7.5a3 3 0 004.5.5l2-2a3 3 0 00-4.24-4.24l-1.14 1.13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M8 5.5a3 3 0 00-4.5-.5l-2 2a3 3 0 004.24 4.24l1.13-1.13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Copiar link
+      </button>
+      <button class="share-btn">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M12 1L7 6M12 1H8M12 1V5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 2H2a1 1 0 00-1 1v8a1 1 0 001 1h8a1 1 0 001-1V8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        WhatsApp
+      </button>
+    </div>
+
+    <!-- RELATED -->
+    <div class="rv">
+      <div class="related-h">También te puede interesar</div>
+      <div class="related-grid">
+        <a href="blog-articulo.html" class="related-card" style="text-decoration:none">
+          <div class="related-img"></div>
+          <div class="related-body">
+            <div class="related-cat" style="margin-bottom:5px"><span class="cat-badge cat-agua" style="font-size:9px">Ambiente</span></div>
+            <div class="related-h2">1,800 millones de garrafones al año: el problema que México ignora</div>
+          </div>
+        </a>
+        <a href="blog-articulo.html" class="related-card" style="text-decoration:none">
+          <div class="related-img"></div>
+          <div class="related-body">
+            <div class="related-cat" style="margin-bottom:5px"><span class="cat-badge cat-tips" style="font-size:9px">Tips</span></div>
+            <div class="related-h2">7 señales de que tu filtro de agua necesita mantenimiento ya</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- TOC -->
+    <div class="sidebar-card">
+      <div class="sidebar-h">Contenido</div>
+      <div class="toc-list">
+        <div class="toc-item active">El mito de los 8 vasos</div>
+        <div class="toc-item">La fórmula correcta</div>
+        <div class="toc-item">Qué afecta tu hidratación</div>
+        <div class="toc-item">La calidad del agua importa</div>
+      </div>
+    </div>
+
+    <!-- NEWSLETTER SIDEBAR -->
+    <div class="sb-nl">
+      <div class="sb-nl-h">Contenido así,<br>en tu inbox.</div>
+      <div class="sb-nl-p">Cada dos semanas. Sin spam.</div>
+      <input class="sb-nl-input" type="email" placeholder="tu@correo.com">
+      <button class="sb-nl-btn" onclick="sbNlSubmit(this)">Suscribirme →</button>
+    </div>
+
+    <!-- CTA COTIZAR -->
+    <div class="sb-cta">
+      <div class="sb-cta-h">¿Listo para olvidar el garrafón?</div>
+      <div class="sb-cta-p">Agua de alta calidad directo del grifo desde $369/mes. Todo incluido.</div>
+      <a href="simple-landing.html#cotiza" class="sb-cta-btn">Cotizar mi plan →</a>
+    </div>
+
+    <!-- RELATED (sidebar version) -->
+    <div class="sidebar-card">
+      <div class="sidebar-h">Artículos relacionados</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a href="blog-articulo.html" style="display:flex;gap:10px;align-items:center;text-decoration:none">
+          <div style="width:52px;height:40px;border-radius:8px;background:var(--gray-100);flex-shrink:0"></div>
+          <div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.4">1,800 millones de garrafones al año</div>
+        </a>
+        <a href="blog-articulo.html" style="display:flex;gap:10px;align-items:center;text-decoration:none">
+          <div style="width:52px;height:40px;border-radius:8px;background:var(--gray-100);flex-shrink:0"></div>
+          <div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.4">7 señales de que tu filtro necesita mantenimiento</div>
+        </a>
+        <a href="blog-articulo.html" style="display:flex;gap:10px;align-items:center;text-decoration:none">
+          <div style="width:52px;height:40px;border-radius:8px;background:var(--gray-100);flex-shrink:0"></div>
+          <div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.4">Vivir en departamento y olvidarte del garrafón</div>
+        </a>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<footer style="margin-top:60px"><div class="container">
+  <div class="ft-row">
+    <span class="ft-name">simple</span>
+    <div class="ft-links"><a href="simple-landing.html">Inicio</a><a href="blog.html">Blog</a><a href="simple-landing.html#cotiza">Cotizar</a></div>
+  </div>
+  <div class="ft-copy">© 2025 Colere Water, S.A.P.I. de C.V. · by Junghanns</div>
+</div></footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.nav-drop-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = btn.classList.contains('open');
+      document.querySelectorAll('.nav-drop-btn').forEach(function(b) {
+        b.classList.remove('open');
+        b.closest('.nav-item').querySelector('.nav-dropdown').classList.remove('open');
+      });
+      if (!open) { btn.classList.add('open'); btn.closest('.nav-item').querySelector('.nav-dropdown').classList.add('open'); }
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.nav-drop-btn').forEach(function(b) {
+      b.classList.remove('open');
+      b.closest('.nav-item').querySelector('.nav-dropdown').classList.remove('open');
+    });
+  });
+  var ham = document.getElementById('navHam'), mm = document.getElementById('mobileMenu');
+  if (ham) ham.addEventListener('click', function() { ham.classList.toggle('open'); mm.classList.toggle('open'); });
+  document.querySelectorAll('.mobile-menu a').forEach(function(a) { a.addEventListener('click', function() { ham.classList.remove('open'); mm.classList.remove('open'); }); });
+  var obs = new IntersectionObserver(function(es) { es.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('in'); }); }, {threshold:0.07});
+  document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
+  window.addEventListener('scroll', function() { document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 20); });
+  document.querySelectorAll('.faq-q').forEach(function(q) {
+    q.addEventListener('click', function() {
+      var item = q.closest('.faq-item'); var open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+      if (!open) item.classList.add('open');
+    });
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  window.copyLink = function(btn) {
+    navigator.clipboard.writeText(window.location.href).then(function() {
+      btn.textContent = '¡Copiado!';
+      setTimeout(function() { btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M5 7.5a3 3 0 004.5.5l2-2a3 3 0 00-4.24-4.24l-1.14 1.13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M8 5.5a3 3 0 00-4.5-.5l-2 2a3 3 0 004.24 4.24l1.13-1.13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Copiar link'; }, 2000);
+    });
+  };
+  window.sbNlSubmit = function(btn) {
+    btn.textContent = '¡Suscrito!';
+    btn.style.background = '#7A7E5E';
+    btn.disabled = true;
+  };
+
+  var tocItems = document.querySelectorAll('.toc-item');
+  tocItems.forEach(function(item, i) {
+    item.addEventListener('click', function() {
+      tocItems.forEach(function(t) { t.classList.remove('active'); });
+      item.classList.add('active');
+    });
+  });
+});
+</script>
+</body>
+</html>

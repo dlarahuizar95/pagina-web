@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Blog — Simple</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --navy:#0F2336;--blue:#7A97AB;--sage:#A3A983;--sage-dk:#7A7E5E;--sage-lt:#C5C7A5;
+  --white:#fff;--gray-50:#F7F8FA;--gray-100:#F0F2F5;--gray-200:#E4E7EC;
+  --gray-400:#9AA5B4;--gray-600:#4A5568;--text:#0F2336;--text-md:#374151;
+  --text-sm:#6B7280;--border:#E5E7EB;--radius:10px;--radius-lg:16px;--radius-xl:24px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}ul{list-style:none}button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* NAV */
+.nav{position:fixed;inset:0 0 auto 0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
+.nav-logo{display:flex;align-items:center;gap:8px}
+.nav-wordmark{font-size:20px;font-weight:300;color:var(--navy);letter-spacing:-0.3px}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-item{position:relative}
+.nav-link{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:500;color:var(--text-md);padding:8px 12px;border-radius:8px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-link:hover{color:var(--text);background:var(--gray-50)}
+.nav-chevron{transition:transform .2s;color:var(--gray-400)}
+.nav-drop-btn{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:500;color:var(--text-md);padding:8px 12px;border-radius:8px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-drop-btn:hover,.nav-drop-btn.open{color:var(--text);background:var(--gray-50)}
+.nav-drop-btn.open .nav-chevron{transform:rotate(180deg)}
+.nav-dropdown{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(-4px);min-width:210px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:6px;box-shadow:0 20px 48px rgba(0,0,0,.1);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:300}
+.nav-dropdown.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.drop-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;transition:background .12s;cursor:pointer}
+.drop-item:hover{background:var(--gray-50)}
+.drop-icon{width:32px;height:32px;border-radius:8px;background:var(--gray-100);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.drop-label{font-size:13px;font-weight:600;color:var(--text)}
+.drop-sub{font-size:11px;color:var(--text-sm);margin-top:1px}
+.nav-right{display:flex;align-items:center;gap:8px}
+.btn-nav-primary{font-size:13px;font-weight:600;color:#fff;padding:10px 20px;border-radius:var(--radius);background:var(--navy);transition:background .15s}
+.btn-nav-primary:hover{background:#0a1a28}
+.nav-ham{display:none;flex-direction:column;gap:5px;width:32px;padding:6px 4px}
+.nav-ham span{display:block;height:1.5px;background:var(--text);border-radius:2px;transition:all .2s}
+.nav-ham.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.nav-ham.open span:nth-child(2){opacity:0}
+.nav-ham.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:#fff;z-index:190;padding:20px 24px;flex-direction:column;gap:2px;overflow-y:auto;border-top:1px solid var(--border)}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:15px;font-weight:500;color:var(--text);padding:13px 0;border-bottom:1px solid var(--border)}
+.mob-sub{font-size:14px!important;font-weight:400!important;color:var(--text-sm)!important;padding-left:16px!important}
+.mob-group-h{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-400);padding:16px 0 4px}
+.mob-cta{margin-top:20px;background:var(--navy)!important;color:#fff!important;text-align:center;border-radius:var(--radius)!important;padding:14px!important;border:none!important;font-weight:600!important}
+
+/* LAYOUT */
+.container{max-width:1140px;margin:0 auto;padding:0 48px}
+.section{padding:80px 0}
+.bg-gray{background:var(--gray-50)}
+.bg-navy{background:var(--navy)}
+
+/* TYPOGRAPHY */
+.t-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage-dk);display:flex;align-items:center;gap:8px}
+.t-eyebrow::before{content:'';width:18px;height:1.5px;background:var(--sage)}
+.t-h1{font-size:clamp(36px,5vw,60px);font-weight:800;line-height:1.06;letter-spacing:-1.5px;color:var(--text)}
+.t-h2{font-size:clamp(26px,3.2vw,40px);font-weight:800;line-height:1.1;letter-spacing:-1px;color:var(--text)}
+.t-h3{font-size:20px;font-weight:700;letter-spacing:-0.3px;color:var(--text)}
+.t-body{font-size:16px;line-height:1.72;color:var(--text-md);font-weight:400}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:13px 26px;border-radius:var(--radius);font-size:14px;font-weight:600;border:none;transition:all .15s}
+.btn-primary:hover{background:#0a1a28;transform:translateY(-1px);box-shadow:0 8px 24px rgba(15,35,54,.18)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--text);padding:13px 26px;border-radius:var(--radius);font-size:14px;font-weight:600;border:1.5px solid var(--border);transition:all .15s}
+.btn-secondary:hover{border-color:var(--gray-400);background:var(--gray-50)}
+
+/* FOOTER minimal */
+footer{background:var(--navy);padding:40px 0 28px}
+.ft-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.ft-name{font-size:18px;font-weight:300;color:#fff;letter-spacing:-0.3px}
+.ft-links{display:flex;gap:24px}
+.ft-links a{font-size:13px;color:rgba(255,255,255,.35);transition:color .15s}
+.ft-links a:hover{color:rgba(255,255,255,.7)}
+.ft-copy{font-size:12px;color:rgba(255,255,255,.18);margin-top:20px}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.rv.in{opacity:1;transform:none}
+
+/* HERO PAGE */
+.page-hero{padding:120px 0 72px;border-bottom:1px solid var(--border)}
+.page-hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.page-hero-media{border-radius:var(--radius-xl);overflow:hidden;aspect-ratio:4/3;background:var(--gray-100);position:relative}
+
+/* PLACEHOLDER styles */
+.placeholder-box{background:var(--gray-100);border:2px dashed var(--gray-200);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;color:var(--gray-400);font-size:13px;font-weight:500;text-align:center;padding:24px}
+
+@media(max-width:960px){
+  .nav{padding:0 24px}
+  .nav-links{display:none}
+  .nav-ham{display:flex}
+  .container{padding:0 24px}
+  .section{padding:60px 0}
+  .page-hero-inner{grid-template-columns:1fr}
+}
+
+
+/* FILTER BAR */
+.filter-bar {
+  position: sticky; top: 64px; z-index: 100;
+  background: rgba(255,255,255,.96); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+.filter-inner {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.search-wrap {
+  position: relative; flex: 1; min-width: 200px; max-width: 280px;
+}
+.search-input {
+  width: 100%; padding: 8px 12px 8px 36px;
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  font-family: 'Inter', sans-serif; font-size: 13px; color: var(--text);
+  background: var(--gray-50); outline: none; transition: border-color .15s;
+}
+.search-input:focus { border-color: var(--navy); background: #fff; }
+.search-ico {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  pointer-events: none;
+}
+.cat-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.cat-pill {
+  padding: 6px 14px; border-radius: 100px;
+  border: 1.5px solid var(--border); background: #fff;
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+  color: var(--text-sm); cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.cat-pill:hover { border-color: var(--gray-400); color: var(--text); }
+.cat-pill.on { border-color: var(--navy); background: var(--navy); color: #fff; }
+
+/* FEATURED */
+.featured-wrap {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-radius: var(--radius-xl); overflow: hidden;
+  border: 1.5px solid var(--border); margin: 48px 0 40px;
+}
+.featured-img {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1B3A52, #7A97AB);
+  position: relative; overflow: hidden;
+}
+.featured-img img { width:100%; height:100%; object-fit:cover; display:block; }
+.featured-body { padding: 40px 36px; display: flex; flex-direction: column; justify-content: center; }
+.featured-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.cat-badge {
+  display: inline-flex; align-items: center;
+  font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 100px;
+}
+.cat-salud   { background: rgba(122,151,171,.12); color: #185FA5; }
+.cat-agua    { background: rgba(163,169,131,.15); color: #3B6D11; }
+.cat-cdmx    { background: rgba(15,35,54,.08);   color: #374151; }
+.cat-tips    { background: rgba(163,169,131,.1);  color: var(--sage-dk); }
+.read-time { font-size: 11px; color: var(--text-sm); }
+.featured-h { font-size: clamp(20px,2.5vw,30px); font-weight: 800; color: var(--text); letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 12px; }
+.featured-p { font-size: 14px; line-height: 1.7; color: var(--text-md); margin-bottom: 20px; }
+.author-row { display: flex; align-items: center; gap: 10px; }
+.author-av  { width: 32px; height: 32px; border-radius: 50%; background: var(--gray-200); overflow: hidden; flex-shrink:0; }
+.author-av img { width:100%; height:100%; object-fit:cover; }
+.author-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.author-date { font-size: 11px; color: var(--text-sm); }
+
+/* GRID */
+.blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.article-card {
+  border: 1.5px solid var(--border); border-radius: var(--radius-xl);
+  overflow: hidden; background: #fff;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  display: flex; flex-direction: column;
+}
+.article-card:hover { border-color: var(--navy); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(15,35,54,.08); cursor:pointer; }
+.card-img { aspect-ratio: 16/9; background: var(--gray-100); position:relative; overflow:hidden; }
+.card-img img { width:100%; height:100%; object-fit:cover; display:block; }
+.card-img-ph { width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px; }
+.card-body { padding: 18px 16px 20px; display:flex; flex-direction:column; flex:1; }
+.card-meta  { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap:wrap; }
+.card-h     { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; line-height: 1.35; margin-bottom: 8px; }
+.card-p     { font-size: 13px; line-height: 1.6; color: var(--text-sm); margin-bottom: 14px; flex:1; }
+.card-author { display:flex; align-items:center; gap:8px; margin-top:auto; padding-top:12px; border-top:1px solid var(--border); }
+
+/* NEWSLETTER BAND */
+.nl-band {
+  background: var(--navy); border-radius: var(--radius-xl);
+  padding: 44px 48px; display: grid; grid-template-columns: 1fr auto;
+  gap: 48px; align-items: center; margin: 40px 0;
+}
+.nl-eyebrow { font-size: 11px; font-weight: 700; letter-spacing:.1em; text-transform:uppercase; color: rgba(255,255,255,.4); margin-bottom: 8px; }
+.nl-h { font-size: clamp(20px,2.5vw,28px); font-weight: 800; color: #fff; letter-spacing: -0.6px; margin-bottom: 6px; }
+.nl-p { font-size: 13px; color: rgba(255,255,255,.5); }
+.nl-form { display: flex; gap: 8px; }
+.nl-input {
+  flex:1; padding: 12px 16px; border: none;
+  border-radius: var(--radius); font-family:'Inter',sans-serif; font-size: 13px;
+  background: rgba(255,255,255,.12); color: #fff; outline: none;
+  transition: background .15s;
+}
+.nl-input::placeholder { color: rgba(255,255,255,.35); }
+.nl-input:focus { background: rgba(255,255,255,.18); }
+.nl-btn {
+  padding: 12px 22px; border-radius: var(--radius);
+  background: var(--sage); color: #fff; border: none;
+  font-family:'Inter',sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; white-space: nowrap; transition: background .15s;
+}
+.nl-btn:hover { background: var(--sage-dk); }
+.nl-note { font-size: 11px; color: rgba(255,255,255,.3); margin-top: 8px; }
+
+/* LOAD MORE */
+.load-more-wrap { text-align: center; margin: 40px 0 20px; }
+.btn-load {
+  padding: 12px 32px; border-radius: var(--radius);
+  border: 1.5px solid var(--border); background: #fff;
+  font-family:'Inter',sans-serif; font-size: 13px; font-weight: 600; color: var(--text);
+  cursor: pointer; transition: all .15s;
+}
+.btn-load:hover { border-color: var(--navy); color: var(--navy); }
+
+/* NO RESULTS */
+.no-results { text-align:center; padding: 60px 20px; display:none; }
+.no-results-h { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.no-results-p { font-size: 14px; color: var(--text-sm); }
+
+@media(max-width:960px){
+  .featured-wrap { grid-template-columns:1fr; }
+  .blog-grid { grid-template-columns:1fr 1fr; }
+  .nl-band { grid-template-columns:1fr; gap:24px; padding:32px 24px; }
+  .nl-form { flex-direction:column; }
+}
+@media(max-width:600px){
+  .blog-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <a href="simple-landing.html" class="nav-logo">
+    <svg width="22" height="28" viewBox="0 0 28 36" fill="none">
+      <line x1="14" y1="3" x2="14" y2="33" stroke="#A3A983" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M13.5 7 C11 7 7.5 5.5 7.5 2.5 C7.5 0.5 9.5 -0.2 11.5 0.5 C13.2 1.2 13.5 3.5 13.5 5.5 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M13.5 22 C11 22 7.5 20.5 7.5 17.5 C7.5 15.5 9.5 14.8 11.5 15.5 C13.2 16.2 13.5 18.5 13.5 20.5 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M14.5 15 C17 15 20 13.5 20.5 10.5 C21 8.5 19.5 7.5 17.5 8 C15.8 8.5 14.5 10.5 14.5 13 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-wordmark">simple</span>
+  </a>
+  <ul class="nav-links">
+    <li class="nav-item"><a href="suscripcion.html" class="nav-link">Suscripción</a></li>
+    <li class="nav-item has-drop">
+      <button class="nav-drop-btn">Quiénes somos
+        <svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nav-dropdown">
+        <a href="ubicacion.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z" stroke="#7A97AB" stroke-width="1.2"/><circle cx="8" cy="6" r="1.5" stroke="#7A97AB" stroke-width="1.2"/></svg></div><div><div class="drop-label">Ubicación</div><div class="drop-sub">Dónde operamos</div></div></a>
+        <a href="sostenibilidad.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C5.5 4 3 6 3 9a5 5 0 0010 0c0-3-2.5-5-5-7z" stroke="#A3A983" stroke-width="1.2"/></svg></div><div><div class="drop-label">Sostenibilidad</div><div class="drop-sub">Nuestro impacto ambiental</div></div></a>
+        <a href="equipo.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="2.5" stroke="#7A97AB" stroke-width="1.2"/><path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div><div><div class="drop-label">Equipo</div><div class="drop-sub">Las personas detrás de Simple</div></div></a>
+      </div>
+    </li>
+    <li class="nav-item has-drop">
+      <button class="nav-drop-btn">Lealtad
+        <svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nav-dropdown">
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.3 2.4 1.3 4L8 10l-3.5 2.4 1.3-4L2.5 6h4z" stroke="#A3A983" stroke-width="1.2"/></svg></div><div><div class="drop-label">Embajadores</div><div class="drop-sub">Representa a Simple</div></div></a>
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="5.5" cy="6" r="2" stroke="#7A97AB" stroke-width="1.2"/><circle cx="10.5" cy="6" r="2" stroke="#7A97AB" stroke-width="1.2"/><path d="M2 13c0-1.93 1.57-3.5 3.5-3.5S9 11.07 9 13M9.5 10c1.1.35 2 1.4 2 3" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div><div><div class="drop-label">Referidos</div><div class="drop-sub">Gana por recomendar</div></div></a>
+      </div>
+    </li>
+    <li class="nav-item"><a href="#" class="nav-link">Blog</a></li>
+    <li class="nav-item has-drop">
+      <button class="nav-drop-btn">Portal clientes
+        <svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nav-dropdown">
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="1" width="9" height="14" rx="1.5" stroke="#7A97AB" stroke-width="1.2"/><path d="M6 4h4M6 7h4M6 10h2" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div><div><div class="drop-label">App Simple</div><div class="drop-sub">Monitorea tu consumo</div></div></a>
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 3.5h11a1 1 0 011 1v6a1 1 0 01-1 1H9l-1.5 2L6 11.5H2.5a1 1 0 01-1-1v-6a1 1 0 011-1z" stroke="#7A97AB" stroke-width="1.2"/></svg></div><div><div class="drop-label">Servicio al cliente</div><div class="drop-sub">Soporte 24/7</div></div></a>
+      </div>
+    </li>
+  </ul>
+  <div class="nav-right">
+    <a href="simple-landing.html#cotiza" class="btn-nav-primary">Cotizar ahora</a>
+    <button class="nav-ham" id="navHam" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="suscripcion.html">Suscripción</a>
+  <div class="mob-group-h">Quiénes somos</div>
+  <a href="ubicacion.html" class="mob-sub">Ubicación</a>
+  <a href="sostenibilidad.html" class="mob-sub">Sostenibilidad</a>
+  <a href="equipo.html" class="mob-sub">Equipo</a>
+  <div class="mob-group-h">Lealtad</div>
+  <a href="#" class="mob-sub">Embajadores</a>
+  <a href="#" class="mob-sub">Referidos</a>
+  <a href="#">Blog</a>
+  <div class="mob-group-h">Portal clientes</div>
+  <a href="#" class="mob-sub">App Simple</a>
+  <a href="#" class="mob-sub">Servicio al cliente</a>
+  <a href="simple-landing.html#cotiza" class="mob-cta">Cotizar ahora</a>
+</div>
+
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-inner">
+      <div class="search-wrap">
+        <svg class="search-ico" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#9AA5B4" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="#9AA5B4" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input class="search-input" type="text" id="searchInput" placeholder="Buscar artículos..." oninput="filterPosts()">
+      </div>
+      <div class="cat-pills">
+        <button class="cat-pill on" onclick="setcat('todos',this)">Todos</button>
+        <button class="cat-pill" onclick="setcat('salud',this)">Salud e hidratación</button>
+        <button class="cat-pill" onclick="setcat('agua',this)">Agua y ambiente</button>
+        <button class="cat-pill" onclick="setcat('cdmx',this)">Vida en CDMX</button>
+        <button class="cat-pill" onclick="setcat('tips',this)">Tips del hogar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="padding-top:64px"></div>
+
+<div class="container">
+
+  <!-- FEATURED -->
+  <div class="featured-wrap rv" id="featuredWrap">
+    <div class="featured-img">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="4" y="6" width="32" height="26" rx="4" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/><circle cx="14" cy="16" r="3" stroke="rgba(255,255,255,.3)" stroke-width="1.3"/><path d="M4 26l8-7 5 5 5-6 9 8" stroke="rgba(255,255,255,.3)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:11px;color:rgba(255,255,255,.3);font-weight:500">Imagen del artículo destacado</span>
+      </div>
+    </div>
+    <div class="featured-body">
+      <div class="featured-meta">
+        <span class="cat-badge cat-salud">Salud e hidratación</span>
+        <span class="read-time">5 min de lectura</span>
+      </div>
+      <h2 class="featured-h">¿Cuánta agua deberías tomar al día según tu peso y actividad?</h2>
+      <p class="featured-p">La regla de los 8 vasos es un mito simplificado. La cantidad correcta depende de tu masa corporal, tu nivel de actividad y la calidad del agua que consumes. Te explicamos la fórmula real.</p>
+      <div class="author-row">
+        <div class="author-av" style="background:var(--blue);display:flex;align-items:center;justify-content:center">
+          <span style="font-size:13px;font-weight:700;color:#fff">DR</span>
+        </div>
+        <div>
+          <div class="author-name">Dra. <!-- Nombre experto invitado --></div>
+          <div class="author-date">12 Abr 2025 · Experta invitada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="blog-grid" id="blogGrid">
+
+    <!-- PLACEHOLDER ARTICLES — reemplazar con CMS o array real -->
+
+    <div class="article-card" data-cat="salud" data-title="hidratación deportiva rendimiento">
+      <div class="card-img">
+        <div class="card-img-ph">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="24" height="18" rx="3" stroke="#D1D5DB" stroke-width="1.3"/><circle cx="10" cy="11" r="2.5" stroke="#D1D5DB" stroke-width="1.2"/><path d="M2 18l6-5 4 4 4-5 7 7" stroke="#D1D5DB" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:10px;color:#D1D5DB;font-weight:500">Foto del artículo</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="cat-badge cat-salud">Salud</span><span class="read-time">4 min</span></div>
+        <div class="card-h">Hidratación y rendimiento deportivo: lo que dice la ciencia</div>
+        <p class="card-p">Un déficit de solo 2% de agua en tu cuerpo reduce tu rendimiento hasta 20%. Aquí las estrategias que usan los atletas profesionales.</p>
+        <div class="card-author">
+          <div class="author-av" style="background:var(--gray-200);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-weight:700;color:var(--gray-400)">EI</span></div>
+          <div><div class="author-name" style="font-size:12px">Equipo Simple</div><div class="author-date">8 Abr 2025</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="agua" data-title="garrafones plástico contaminación">
+      <div class="card-img">
+        <div class="card-img-ph">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="24" height="18" rx="3" stroke="#D1D5DB" stroke-width="1.3"/><circle cx="10" cy="11" r="2.5" stroke="#D1D5DB" stroke-width="1.2"/><path d="M2 18l6-5 4 4 4-5 7 7" stroke="#D1D5DB" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:10px;color:#D1D5DB;font-weight:500">Foto del artículo</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="cat-badge cat-agua">Ambiente</span><span class="read-time">6 min</span></div>
+        <div class="card-h">1,800 millones de garrafones al año: el problema de plástico que México ignora</div>
+        <p class="card-p">México es el segundo mayor consumidor de agua embotellada per cápita del mundo. Estos son los números reales detrás de ese dato.</p>
+        <div class="card-author">
+          <div class="author-av" style="background:var(--sage);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-weight:700;color:#fff">ES</span></div>
+          <div><div class="author-name" style="font-size:12px">Equipo Simple</div><div class="author-date">5 Abr 2025</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="cdmx" data-title="colonias agua calidad CDMX">
+      <div class="card-img">
+        <div class="card-img-ph">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="24" height="18" rx="3" stroke="#D1D5DB" stroke-width="1.3"/><circle cx="10" cy="11" r="2.5" stroke="#D1D5DB" stroke-width="1.2"/><path d="M2 18l6-5 4 4 4-5 7 7" stroke="#D1D5DB" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:10px;color:#D1D5DB;font-weight:500">Foto del artículo</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="cat-badge cat-cdmx">Vida en CDMX</span><span class="read-time">3 min</span></div>
+        <div class="card-h">¿De dónde viene el agua de tu colonia? Una guía por alcaldías</div>
+        <p class="card-p">El agua que llega a tu grifo en Polanco no es la misma que en Iztapalapa. Te explicamos el sistema hídrico de la ciudad colonia por colonia.</p>
+        <div class="card-author">
+          <div class="author-av" style="background:var(--navy);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-weight:700;color:#fff">ES</span></div>
+          <div><div class="author-name" style="font-size:12px">Equipo Simple</div><div class="author-date">1 Abr 2025</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="tips" data-title="filtro mantenimiento cartuchos casa">
+      <div class="card-img">
+        <div class="card-img-ph">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="24" height="18" rx="3" stroke="#D1D5DB" stroke-width="1.3"/><circle cx="10" cy="11" r="2.5" stroke="#D1D5DB" stroke-width="1.2"/><path d="M2 18l6-5 4 4 4-5 7 7" stroke="#D1D5DB" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:10px;color:#D1D5DB;font-weight:500">Foto del artículo</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="cat-badge cat-tips">Tips del hogar</span><span class="read-time">5 min</span></div>
+        <div class="card-h">7 señales de que tu filtro de agua necesita mantenimiento ya</div>
+        <p class="card-p">El sabor, el olor y la presión del agua te dicen más de lo que crees. Aprende a leer las señales antes de que sea demasiado tarde.</p>
+        <div class="card-author">
+          <div class="author-av" style="background:var(--gray-200);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-weight:700;color:var(--gray-400)">ES</span></div>
+          <div><div class="author-name" style="font-size:12px">Equipo Simple</div><div class="author-date">28 Mar 2025</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="salud" data-title="ósmosis agua purificada minerales">
+      <div class="card-img">
+        <div class="card-img-ph">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="24" height="18" rx="3" stroke="#D1D5DB" stroke-width="1.3"/><circle cx="10" cy="11" r="2.5" stroke="#D1D5DB" stroke-width="1.2"/><path d="M2 18l6-5 4 4 4-5 7 7" stroke="#D1D5DB" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:10px;color:#D1D5DB;font-weight:500">Foto del artículo</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="cat-badge cat-salud">Salud</span><span class="read-time">7 min</span></div>
+        <div class="card-h">Ósmosis inversa: ¿quita los minerales que tu cuerpo necesita?</div>
+        <p class="card-p">El debate más frecuente sobre filtración. Desmontamos el mito con evidencia científica y te explicamos exactamente qué hace y qué no hace la ósmosis.</p>
+        <div class="card-author">
+          <div class="author-av" style="background:var(--blue);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-weight:700;color:#fff">EI</span></div>
+          <div><div class="author-name" style="font-size:12px">Experta invitada</div><div class="author-date">22 Mar 2025</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-card" data-cat="cdmx" data-title="departamento agua grifo colonia roma condesa">
+      <div class="card-img">
+        <div class="card-img-ph">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="24" height="18" rx="3" stroke="#D1D5DB" stroke-width="1.3"/><circle cx="10" cy="11" r="2.5" stroke="#D1D5DB" stroke-width="1.2"/><path d="M2 18l6-5 4 4 4-5 7 7" stroke="#D1D5DB" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:10px;color:#D1D5DB;font-weight:500">Foto del artículo</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span class="cat-badge cat-cdmx">Vida en CDMX</span><span class="read-time">4 min</span></div>
+        <div class="card-h">Vivir en departamento y olvidarte del garrafón: sí es posible</div>
+        <p class="card-p">Tres familias en Roma Norte, Polanco y Del Valle comparten cómo cambió su rutina después de instalar un filtro de ósmosis. Sin garrafones, sin logística.</p>
+        <div class="card-author">
+          <div class="author-av" style="background:var(--sage);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-weight:700;color:#fff">ES</span></div>
+          <div><div class="author-name" style="font-size:12px">Equipo Simple</div><div class="author-date">18 Mar 2025</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="no-results" id="noResults">
+    <div class="no-results-h">Sin resultados</div>
+    <div class="no-results-p">Intenta con otra categoría o término de búsqueda.</div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div class="nl-band rv">
+    <div>
+      <div class="nl-eyebrow">Newsletter Simple</div>
+      <div class="nl-h">Agua, salud y CDMX.<br>En tu inbox cada dos semanas.</div>
+      <div class="nl-p">Artículos seleccionados, sin spam. Cancelable en 1 clic.</div>
+    </div>
+    <div style="min-width:280px">
+      <div class="nl-form">
+        <input class="nl-input" type="email" placeholder="tu@correo.com">
+        <button class="nl-btn" onclick="nlSubmit(this)">Suscribirme</button>
+      </div>
+      <div class="nl-note">Sin spam · Cancelable en 1 clic · Solo lo bueno</div>
+    </div>
+  </div>
+
+  <!-- LOAD MORE -->
+  <div class="load-more-wrap rv">
+    <button class="btn-load">Cargar más artículos</button>
+    <div style="font-size:12px;color:var(--text-sm);margin-top:10px">Mostrando 6 de 24 artículos</div>
+  </div>
+
+</div>
+
+<footer style="margin-top:40px"><div class="container">
+  <div class="ft-row">
+    <span class="ft-name">simple</span>
+    <div class="ft-links"><a href="simple-landing.html">Inicio</a><a href="suscripcion.html">Suscripción</a><a href="simple-landing.html#cotiza">Cotizar</a></div>
+  </div>
+  <div class="ft-copy">© 2025 Colere Water, S.A.P.I. de C.V. · by Junghanns</div>
+</div></footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.nav-drop-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = btn.classList.contains('open');
+      document.querySelectorAll('.nav-drop-btn').forEach(function(b) {
+        b.classList.remove('open');
+        b.closest('.nav-item').querySelector('.nav-dropdown').classList.remove('open');
+      });
+      if (!open) { btn.classList.add('open'); btn.closest('.nav-item').querySelector('.nav-dropdown').classList.add('open'); }
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.nav-drop-btn').forEach(function(b) {
+      b.classList.remove('open');
+      b.closest('.nav-item').querySelector('.nav-dropdown').classList.remove('open');
+    });
+  });
+  var ham = document.getElementById('navHam'), mm = document.getElementById('mobileMenu');
+  if (ham) ham.addEventListener('click', function() { ham.classList.toggle('open'); mm.classList.toggle('open'); });
+  document.querySelectorAll('.mobile-menu a').forEach(function(a) { a.addEventListener('click', function() { ham.classList.remove('open'); mm.classList.remove('open'); }); });
+  var obs = new IntersectionObserver(function(es) { es.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('in'); }); }, {threshold:0.07});
+  document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
+  window.addEventListener('scroll', function() { document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 20); });
+  document.querySelectorAll('.faq-q').forEach(function(q) {
+    q.addEventListener('click', function() {
+      var item = q.closest('.faq-item'); var open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+      if (!open) item.classList.add('open');
+    });
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var currentCat = 'todos';
+
+  window.setcat = function(cat, btn) {
+    currentCat = cat;
+    document.querySelectorAll('.cat-pill').forEach(function(p) { p.classList.remove('on'); });
+    btn.classList.add('on');
+    filterPosts();
+  };
+
+  window.filterPosts = function() {
+    var q = document.getElementById('searchInput').value.toLowerCase().trim();
+    var cards = document.querySelectorAll('.article-card');
+    var visible = 0;
+    cards.forEach(function(card) {
+      var cat   = card.dataset.cat;
+      var title = card.dataset.title;
+      var matchCat   = currentCat === 'todos' || cat === currentCat;
+      var matchQuery = !q || title.includes(q);
+      if (matchCat && matchQuery) { card.style.display = ''; visible++; }
+      else { card.style.display = 'none'; }
+    });
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    document.getElementById('featuredWrap').style.display = (currentCat !== 'todos' || q) ? 'none' : '';
+  };
+
+  window.nlSubmit = function(btn) {
+    btn.textContent = '¡Listo!';
+    btn.style.background = '#7A7E5E';
+    btn.disabled = true;
+  };
+});
+</script>
+</body>
+</html>

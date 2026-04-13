@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple — Agua sin complicaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --navy:#0F2336;--navy-dk:#0a1a28;--blue:#7A97AB;--blue-lt:#A8BEC9;
+  --sage:#A3A983;--sage-dk:#7A7E5E;--sage-lt:#C5C7A5;
+  --white:#FFFFFF;--g50:#F7F8FA;--g100:#F0F2F5;--g200:#E4E7EC;
+  --g400:#9AA5B4;--text:#0F2336;--textmd:#374151;--textsm:#6B7280;
+  --border:#E5E7EB;--r:10px;--rl:16px;--rxl:24px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+img{display:block;max-width:100%}
+
+/* ── LAYOUT ── */
+.container{max-width:1140px;margin:0 auto;padding:0 48px}
+.section{padding:96px 0}
+.bg-gray{background:var(--g50)}
+.bg-navy{background:var(--navy)}
+
+/* ── TYPE ── */
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage-dk);display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:'';width:18px;height:1.5px;background:var(--sage)}
+.h1{font-size:clamp(40px,5.5vw,68px);font-weight:800;line-height:1.05;letter-spacing:-2px;color:var(--text)}
+.h2{font-size:clamp(28px,3.5vw,44px);font-weight:700;line-height:1.1;letter-spacing:-1.2px;color:var(--text)}
+.lead{font-size:16px;font-weight:400;line-height:1.72;color:var(--textmd)}
+
+/* ── BUTTONS ── */
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:13px 26px;border-radius:var(--r);font-size:14px;font-weight:600;border:1.5px solid var(--navy);transition:all .15s}
+.btn-p:hover{background:var(--navy-dk);transform:translateY(-1px);box-shadow:0 8px 24px rgba(15,35,54,.18)}
+.btn-s{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--text);padding:13px 26px;border-radius:var(--r);font-size:14px;font-weight:600;border:1.5px solid var(--border);transition:all .15s}
+.btn-s:hover{border-color:var(--g400);background:var(--g50)}
+
+/* ── NAV ── */
+.nav{position:fixed;inset:0 0 auto 0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:box-shadow .2s}
+.nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
+.nav-logo{display:flex;align-items:center;gap:8px}
+.nav-wordmark{font-size:20px;font-weight:300;color:var(--navy);letter-spacing:-0.3px}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-item{position:relative}
+.nav-link{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:500;color:var(--textmd);padding:8px 12px;border-radius:8px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-link:hover,.nav-drop-btn:hover{color:var(--text);background:var(--g50)}
+.nav-drop-btn{display:inline-flex;align-items:center;gap:4px;font-size:13.5px;font-weight:500;color:var(--textmd);padding:8px 12px;border-radius:8px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-drop-btn.open{color:var(--text);background:var(--g50)}
+.nav-chevron{transition:transform .2s;color:var(--g400)}
+.nav-drop-btn.open .nav-chevron{transform:rotate(180deg)}
+.nav-dropdown{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(-4px);min-width:210px;background:#fff;border:1px solid var(--border);border-radius:var(--rl);padding:6px;box-shadow:0 20px 48px rgba(0,0,0,.1);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:300}
+.nav-dropdown.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.drop-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;transition:background .12s;cursor:pointer}
+.drop-item:hover{background:var(--g50)}
+.drop-icon{width:32px;height:32px;border-radius:8px;background:var(--g100);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.drop-label{font-size:13px;font-weight:600;color:var(--text)}
+.drop-sub{font-size:11px;color:var(--textsm);margin-top:1px}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-ham{display:none;flex-direction:column;gap:5px;width:32px;padding:6px 4px}
+.nav-ham span{display:block;height:1.5px;background:var(--text);border-radius:2px;transition:all .2s}
+.nav-ham.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.nav-ham.open span:nth-child(2){opacity:0}
+.nav-ham.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+.mob-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:#fff;z-index:190;padding:20px 24px;flex-direction:column;gap:2px;overflow-y:auto;border-top:1px solid var(--border)}
+.mob-menu.open{display:flex}
+.mob-menu a{font-size:15px;font-weight:500;color:var(--text);padding:13px 0;border-bottom:1px solid var(--border)}
+.mob-sub{font-size:14px!important;font-weight:400!important;color:var(--textsm)!important;padding-left:16px!important}
+.mob-gh{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g400);padding:16px 0 4px}
+.mob-cta{margin-top:20px;background:var(--navy)!important;color:#fff!important;text-align:center;border-radius:var(--r)!important;padding:14px!important;border:none!important;font-weight:600!important}
+
+/* ── HERO ── */
+.hero{padding:140px 0 80px;background:#fff;border-bottom:1px solid var(--border)}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--g50);border:1px solid var(--border);border-radius:100px;padding:6px 14px 6px 8px;margin-bottom:24px}
+.hero-badge-dot{width:8px;height:8px;border-radius:50%;background:var(--sage)}
+.hero-badge span{font-size:12px;font-weight:500;color:var(--textmd)}
+.hero-title{margin-bottom:20px}
+.hero-title em{font-style:normal;color:var(--blue)}
+.hero-savings{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.hero-old-price{font-size:13px;color:var(--textsm);text-decoration:line-through}
+.hero-arrow{color:var(--sage)}
+.hero-new-price{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.5px}
+.hero-new-label{font-size:13px;color:var(--textsm)}
+.hero-saving-pill{background:rgba(163,169,131,.15);border:1px solid rgba(163,169,131,.3);color:var(--sage-dk);font-size:11px;font-weight:700;padding:3px 9px;border-radius:100px}
+.hero-lead{max-width:480px;margin-bottom:36px}
+.hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.hero-checks{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hero-check{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--textsm)}
+
+/* Hero card */
+.hero-card{background:var(--navy);border-radius:var(--rxl);padding:32px;box-shadow:0 32px 80px rgba(15,35,54,.2);position:relative;overflow:hidden;animation:floatY 5s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(122,151,171,.25) 0%,transparent 70%);pointer-events:none}
+.hc-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:6px}
+.hc-name{font-size:24px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:4px}
+.hc-sub{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:28px}
+.hc-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.hc-stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px}
+.hc-val{font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.5px;margin-bottom:2px}
+.hc-lbl{font-size:10px;font-weight:500;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.07em}
+.hc-price{border-top:1px solid rgba(255,255,255,.08);padding-top:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hc-from{font-size:12px;color:rgba(255,255,255,.35)}
+.hc-num{font-size:36px;font-weight:800;color:#fff;letter-spacing:-1px}
+.hc-per{font-size:13px;color:rgba(255,255,255,.35)}
+.hc-badge{margin-left:auto;background:rgba(163,169,131,.25);color:var(--sage-lt);border:1px solid rgba(163,169,131,.3);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:100px}
+
+/* ── TRUST BAR — CENTERED ── */
+.trust-bar{
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:#fff;
+  overflow-x:auto;
+}
+.trust-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:20px 40px;
+  border-right:1px solid var(--border);
+  flex-shrink:0;
+}
+.trust-item:last-child{border-right:none}
+.trust-num{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.8px}
+.trust-lbl{font-size:12px;color:var(--textsm);line-height:1.4;max-width:80px}
+
+/* ── COMPARISON ── */
+.cmp3-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.cmp3-col{border-radius:var(--rxl);padding:28px 24px;border:1.5px solid var(--g200);background:var(--g50);display:flex;flex-direction:column;gap:20px}
+.cmp3-col.good{background:var(--navy);border-color:var(--navy)}
+.cmp3-header{display:flex;align-items:flex-start;gap:12px}
+.cmp3-icon{width:36px;height:36px;border-radius:9px;background:var(--g100);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cmp3-tag{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;color:var(--g400)}
+.cmp3-tag.sage{color:var(--sage)}
+.cmp3-title{font-size:14px;font-weight:700;color:var(--text)}
+.good .cmp3-title{color:#fff}
+.cmp3-rows{display:flex;flex-direction:column;gap:14px;flex:1}
+.cmp3-row{display:flex;align-items:flex-start;gap:10px}
+.cmp3-ico{width:20px;height:20px;border-radius:50%;background:var(--g200);color:var(--g400);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:10px;font-weight:700}
+.good .cmp3-ico{background:rgba(163,169,131,.2);color:var(--sage-lt)}
+.cmp3-strong{font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)}
+.good .cmp3-strong{color:#fff}
+.cmp3-desc{font-size:12px;line-height:1.55;color:var(--textsm)}
+.good .cmp3-desc{color:rgba(255,255,255,.45)}
+.cmp3-pill{border-radius:12px;padding:16px 18px;display:flex;align-items:center;gap:12px;margin-top:auto;background:var(--g100)}
+.good .cmp3-pill{background:rgba(163,169,131,.15);border:1px solid rgba(163,169,131,.25)}
+.cmp3-pill-num{font-size:28px;font-weight:800;letter-spacing:-1px;flex-shrink:0;color:var(--text)}
+.good .cmp3-pill-num{color:var(--sage-lt)}
+.cmp3-pill-txt{font-size:12px;line-height:1.45;color:var(--textsm)}
+.good .cmp3-pill-txt{color:rgba(255,255,255,.7)}
+
+/* ── STEPS ── */
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:48px;background:var(--border);border-radius:var(--rxl);overflow:hidden}
+.step{background:#fff;padding:36px 32px;position:relative;transition:background .2s}
+.step:hover{background:var(--g50)}
+.step-num{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.06em;margin-bottom:20px}
+.step-ico{width:44px;height:44px;background:var(--g100);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.step-h{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-0.2px}
+.step-p{font-size:13px;line-height:1.65;color:var(--textsm)}
+.step-arr{position:absolute;right:-13px;top:44px;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;z-index:2;font-size:11px;color:var(--textsm)}
+
+/* ── FEATURES ── */
+.feats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.feat-card{background:var(--g50);border:1px solid var(--border);border-radius:var(--rl);padding:24px 22px;transition:all .2s}
+.feat-card:hover{border-color:var(--blue);background:#fff;box-shadow:0 8px 32px rgba(122,151,171,.1)}
+.feat-ico{width:44px;height:44px;background:#fff;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.feat-h{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:-0.1px}
+.feat-p{font-size:13px;line-height:1.6;color:var(--textsm)}
+
+/* ── TESTIMONIALS ── */
+.testi-layout{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-top:48px}
+.testi-track{position:relative;min-height:260px}
+.testi-slide{position:absolute;top:0;left:0;right:0;opacity:0;transform:translateX(16px);transition:opacity .35s,transform .35s;pointer-events:none}
+.testi-slide.active{opacity:1;transform:none;pointer-events:auto;position:relative}
+.testi-author{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.testi-avatar{width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.testi-name{font-size:14px;font-weight:600;color:var(--text)}
+.testi-loc{font-size:12px;color:var(--textsm);display:flex;align-items:center;gap:4px;margin-top:1px}
+.testi-stars{display:flex;gap:3px;margin-bottom:16px}
+.testi-quote{font-size:clamp(17px,2vw,22px);font-weight:500;line-height:1.5;color:var(--text);letter-spacing:-0.3px}
+.testi-quote::before{content:'"'}
+.testi-quote::after{content:'"'}
+.testi-nav{display:flex;align-items:center;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid var(--border)}
+.testi-dots{display:flex;gap:6px}
+.testi-dot{width:6px;height:6px;border-radius:50%;background:var(--border);border:none;cursor:pointer;padding:0;transition:all .2s}
+.testi-dot.active{background:var(--navy);transform:scale(1.4)}
+.testi-arrows{display:flex;gap:6px}
+.testi-arr{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--textmd);transition:all .15s}
+.testi-arr:hover{border-color:var(--navy);background:var(--navy);color:#fff}
+.testi-right{display:flex;flex-direction:column;gap:16px}
+.testi-photo{border-radius:var(--rxl);overflow:hidden;aspect-ratio:4/3;background:#1B3A52;position:relative;box-shadow:0 16px 48px rgba(15,35,54,.12)}
+.testi-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.testi-photo-badge{position:absolute;bottom:16px;left:16px;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-radius:100px;padding:7px 14px 7px 10px;font-size:12px;font-weight:500;color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.testi-photo-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--sage);flex-shrink:0;box-shadow:0 0 0 2px rgba(163,169,131,.3)}
+.testi-photo-tag{position:absolute;top:16px;right:16px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-radius:10px;padding:8px 12px;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.testi-photo-tag-icon{width:28px;height:28px;border-radius:7px;background:rgba(163,169,131,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.testi-stat{background:var(--g50);border:1px solid var(--border);border-radius:var(--rl);padding:18px 22px;display:flex;align-items:center;gap:14px}
+.testi-stat-num{font-size:32px;font-weight:800;color:var(--text);letter-spacing:-1px;flex-shrink:0}
+.testi-stat-lbl{font-size:13px;color:var(--textsm);line-height:1.45}
+
+/* ── FORM ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.form-promises{display:flex;flex-direction:column;gap:10px;margin-top:32px}
+.form-promise{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.65)}
+.form-check{width:20px;height:20px;border-radius:50%;flex-shrink:0;background:rgba(163,169,131,.2);border:1px solid rgba(163,169,131,.3);display:flex;align-items:center;justify-content:center}
+.form-card{background:#fff;border-radius:var(--rxl);padding:40px 36px;box-shadow:0 40px 80px rgba(0,0,0,.2)}
+.form-card-h{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-0.5px}
+.form-card-sub{font-size:13px;color:var(--textsm);margin-bottom:24px}
+.seg-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:20px}
+.seg-btn{padding:10px;border-radius:8px;border:1.5px solid var(--border);background:var(--g50);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--textsm);cursor:pointer;text-align:center;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.seg-btn.on{border-color:var(--navy);background:var(--navy);color:#fff}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrp{margin-bottom:14px}
+.flbl{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-.1px}
+.finput,.fsel{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:#fff;outline:none;appearance:none;transition:border-color .15s,box-shadow .15s}
+.finput:focus,.fsel:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,35,54,.08)}
+.finput::placeholder{color:var(--g400);font-size:13px}
+.btn-form{width:100%;padding:14px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;transition:all .15s}
+.btn-form:hover{background:var(--navy-dk);transform:translateY(-1px);box-shadow:0 8px 24px rgba(15,35,54,.25)}
+.form-note{text-align:center;font-size:11px;color:var(--textsm);margin-top:10px}
+.success-box{display:none;text-align:center;padding:24px 12px}
+.s-h{font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-0.3px}
+.s-p{font-size:13px;color:var(--textsm);line-height:1.6}
+
+/* ── ECO ── */
+.eco-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;align-items:center;padding:80px 0}
+.eco-h{font-size:clamp(24px,3vw,36px);font-weight:800;color:#fff;letter-spacing:-0.8px;line-height:1.15}
+.eco-stat{text-align:center}
+.eco-num{font-size:52px;font-weight:800;color:#fff;letter-spacing:-2px;line-height:1;margin-bottom:8px}
+.eco-lbl{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5}
+
+/* ── FAQ ── */
+.faq-wrap{max-width:680px;margin:0 auto;margin-top:48px}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;cursor:pointer;font-size:15px;font-weight:600;color:var(--text);user-select:none;letter-spacing:-0.1px}
+.faq-ico{width:26px;height:26px;flex-shrink:0;border:1.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--textsm);transition:transform .22s,background .18s}
+.faq-item.open .faq-ico{transform:rotate(45deg);background:var(--navy);border-color:var(--navy);color:#fff}
+.faq-a{font-size:14px;line-height:1.72;color:var(--textsm);max-height:0;overflow:hidden;transition:max-height .32s ease,padding-bottom .22s}
+.faq-item.open .faq-a{max-height:300px;padding-bottom:18px}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:64px 0 36px}
+.ft-top{display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:32px}
+.ft-brand{max-width:240px}
+.ft-name{font-size:20px;font-weight:300;color:#fff;display:block;margin-bottom:10px;letter-spacing:-0.3px}
+.ft-desc{font-size:13px;color:rgba(255,255,255,.32);line-height:1.65}
+.ft-by{margin-top:18px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.22);display:flex;align-items:center;gap:8px}
+.ft-by::before{content:'';width:16px;height:1px;background:rgba(255,255,255,.18)}
+.ft-cols{display:flex;gap:48px;flex-wrap:wrap}
+.ft-col-h{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:14px}
+.ft-col li{margin-bottom:9px}
+.ft-col a{font-size:13px;color:rgba(255,255,255,.45);transition:color .15s}
+.ft-col a:hover{color:#fff}
+.ft-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.ft-copy{font-size:12px;color:rgba(255,255,255,.18)}
+.ft-legal{display:flex;gap:18px}
+.ft-legal a{font-size:12px;color:rgba(255,255,255,.25);transition:color .15s}
+.ft-legal a:hover{color:rgba(255,255,255,.7)}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.rv.in{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){.feats-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:960px){
+  .nav{padding:0 24px}
+  .nav-links{display:none}
+  .nav-ham{display:flex}
+  .container{padding:0 24px}
+  .section{padding:64px 0}
+  .hero{padding:100px 0 60px}
+  .hero-grid,.form-grid,.testi-layout{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr}
+  .step:first-child{border-radius:var(--rxl) var(--rxl) 0 0}
+  .step:last-child{border-radius:0 0 var(--rxl) var(--rxl)}
+  .step-arr{display:none}
+  .eco-grid{grid-template-columns:1fr;gap:28px;padding:56px 0}
+  .cmp3-grid{grid-template-columns:1fr}
+  .ft-top{flex-direction:column}
+  .trust-bar{justify-content:flex-start}
+  .trust-item{padding:16px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="mainNav">
+  <a href="simple-landing.html" class="nav-logo">
+    <svg width="22" height="28" viewBox="0 0 28 36" fill="none">
+      <line x1="14" y1="3" x2="14" y2="33" stroke="#A3A983" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M13.5 7 C11 7 7.5 5.5 7.5 2.5 C7.5 0.5 9.5 -0.2 11.5 0.5 C13.2 1.2 13.5 3.5 13.5 5.5 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M13.5 22 C11 22 7.5 20.5 7.5 17.5 C7.5 15.5 9.5 14.8 11.5 15.5 C13.2 16.2 13.5 18.5 13.5 20.5 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M14.5 15 C17 15 20 13.5 20.5 10.5 C21 8.5 19.5 7.5 17.5 8 C15.8 8.5 14.5 10.5 14.5 13 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-wordmark">simple</span>
+  </a>
+
+  <ul class="nav-links">
+    <li class="nav-item"><a href="suscripcion.html" class="nav-link">Suscripción</a></li>
+    <li class="nav-item has-drop">
+      <button class="nav-drop-btn">Quiénes somos<svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="nav-dropdown">
+        <a href="ubicacion.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z" stroke="#7A97AB" stroke-width="1.2"/><circle cx="8" cy="6" r="1.5" stroke="#7A97AB" stroke-width="1.2"/></svg></div><div><div class="drop-label">Ubicación</div><div class="drop-sub">Dónde operamos</div></div></a>
+        <a href="sostenibilidad.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C5.5 4 3 6 3 9a5 5 0 0010 0c0-3-2.5-5-5-7z" stroke="#A3A983" stroke-width="1.2"/></svg></div><div><div class="drop-label">Sostenibilidad</div><div class="drop-sub">Nuestro impacto ambiental</div></div></a>
+        <a href="equipo.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="2.5" stroke="#7A97AB" stroke-width="1.2"/><path d="M3 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div><div><div class="drop-label">Equipo</div><div class="drop-sub">Las personas detrás de Simple</div></div></a>
+      </div>
+    </li>
+    <li class="nav-item has-drop">
+      <button class="nav-drop-btn">Lealtad<svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="nav-dropdown">
+        <a href="embajadores.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4h4l-3.3 2.4 1.3 4L8 10l-3.5 2.4 1.3-4L2.5 6h4z" stroke="#A3A983" stroke-width="1.2"/></svg></div><div><div class="drop-label">Embajadores</div><div class="drop-sub">Representa a Simple</div></div></a>
+        <a href="referidos.html" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="5.5" cy="6" r="2" stroke="#7A97AB" stroke-width="1.2"/><circle cx="10.5" cy="6" r="2" stroke="#7A97AB" stroke-width="1.2"/><path d="M2 13c0-1.93 1.57-3.5 3.5-3.5S9 11.07 9 13M9.5 10c1.1.35 2 1.4 2 3" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div><div><div class="drop-label">Referidos</div><div class="drop-sub">Gana por recomendar</div></div></a>
+      </div>
+    </li>
+    <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+    <li class="nav-item has-drop">
+      <button class="nav-drop-btn">Portal clientes<svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="nav-dropdown">
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3.5" y="1" width="9" height="14" rx="1.5" stroke="#7A97AB" stroke-width="1.2"/><path d="M6 4h4M6 7h4M6 10h2" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div><div><div class="drop-label">App Simple</div><div class="drop-sub">Monitorea tu consumo</div></div></a>
+        <a href="#" class="drop-item"><div class="drop-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 3.5h11a1 1 0 011 1v6a1 1 0 01-1 1H9l-1.5 2L6 11.5H2.5a1 1 0 01-1-1v-6a1 1 0 011-1z" stroke="#7A97AB" stroke-width="1.2"/></svg></div><div><div class="drop-label">Servicio al cliente</div><div class="drop-sub">Soporte 24/7</div></div></a>
+      </div>
+    </li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="#cotiza" class="btn-p" style="font-size:13px;padding:10px 20px">Cotizar ahora</a>
+    <button class="nav-ham" id="navHam" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <a href="suscripcion.html">Suscripción</a>
+  <div class="mob-gh">Quiénes somos</div>
+  <a href="ubicacion.html" class="mob-sub">Ubicación</a>
+  <a href="sostenibilidad.html" class="mob-sub">Sostenibilidad</a>
+  <a href="equipo.html" class="mob-sub">Equipo</a>
+  <div class="mob-gh">Lealtad</div>
+  <a href="embajadores.html" class="mob-sub">Embajadores</a>
+  <a href="referidos.html" class="mob-sub">Referidos</a>
+  <a href="blog.html">Blog</a>
+  <div class="mob-gh">Portal clientes</div>
+  <a href="#" class="mob-sub">App Simple</a>
+  <a href="#" class="mob-sub">Servicio al cliente</a>
+  <a href="#cotiza" class="mob-cta">Cotizar ahora</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge"><div class="hero-badge-dot"></div><span>+500 familias en CDMX ya lo usan</span></div>
+        <h1 class="h1 hero-title">Olvida el<br>garrafón.<br><em style="font-style:normal;color:var(--blue)">Para siempre.</em></h1>
+        <div class="hero-savings">
+          <span class="hero-old-price">$800/mes en garrafones</span>
+          <svg class="hero-arrow" width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 6h14M9 1l5 5-5 5" stroke="#A3A983" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="hero-new-price">$369</span>
+          <span class="hero-new-label">/mes con Simple</span>
+          <span class="hero-saving-pill">−54% ahorro</span>
+        </div>
+        <p class="lead hero-lead">Agua purificada directo de tu grifo en 72 horas. Instalación, mantenimiento y monitoreo inteligente desde la app incluidos — <strong style="font-weight:600;color:var(--text)">sin contrato forzoso.</strong></p>
+        <div class="hero-actions">
+          <a href="#cotiza" class="btn-p">Quiero mi cotización gratis<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7.5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="suscripcion.html" class="btn-s">Ver cómo funciona</a>
+        </div>
+        <div class="hero-checks">
+          <span class="hero-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l2.5 2.5 5.5-5" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Respuesta en 24h</span>
+          <span class="hero-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l2.5 2.5 5.5-5" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Sin contrato</span>
+          <span class="hero-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l2.5 2.5 5.5-5" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Instalación en 72h</span>
+        </div>
+      </div>
+      <div>
+        <div class="hero-card">
+          <div class="hc-label">Equipo incluido</div>
+          <div class="hc-name">Simple One</div>
+          <div class="hc-sub">Ósmosis inversa · 4 etapas · app integrada</div>
+          <div class="hc-stats">
+            <div class="hc-stat"><div class="hc-val">99%</div><div class="hc-lbl">Filtración virus y bacterias</div></div>
+            <div class="hc-stat"><div class="hc-val">4</div><div class="hc-lbl">Etapas de filtrado</div></div>
+            <div class="hc-stat"><div class="hc-val">24/7</div><div class="hc-lbl">Tu agua, en tiempo real</div></div>
+            <div class="hc-stat"><div class="hc-val">72h</div><div class="hc-lbl">Instalación garantizada</div></div>
+          </div>
+          <div class="hc-price">
+            <span class="hc-from">Desde</span>
+            <span class="hc-num">$369</span>
+            <span class="hc-per">/mes</span>
+            <span class="hc-badge">Todo incluido</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR — CENTERED -->
+<div class="trust-bar rv">
+  <div class="trust-item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="10" r="6" stroke="#7A97AB" stroke-width="1.4"/><path d="M8 20l4 3 4-3" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div><div class="trust-num">+500</div><div class="trust-lbl">filtros activos instalados</div></div>
+  </div>
+  <div class="trust-item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2l9 3.5v7c0 5-4 9-9 11C8 21.5 3 17.5 3 12.5v-7L12 2z" stroke="#7A97AB" stroke-width="1.4" stroke-linecap="round"/><path d="M9 12l2.5 2.5 4.5-5" stroke="#A3A983" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div><div class="trust-num">30+</div><div class="trust-lbl">años experiencia hídrica</div></div>
+  </div>
+  <div class="trust-item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="#7A97AB" stroke-width="1.4"/><path d="M2 10h20M6 15h5" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <div><div class="trust-num">$369</div><div class="trust-lbl">desde/mes todo incluido</div></div>
+  </div>
+  <div class="trust-item">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="#7A97AB" stroke-width="1.4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5.64 5.64l1.41 1.41M16.95 16.95l1.41 1.41M5.64 18.36l1.41-1.41M16.95 7.05l1.41-1.41" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round"/></svg>
+    <div><div class="trust-num">72h</div><div class="trust-lbl">instalación garantizada</div></div>
+  </div>
+  <div class="trust-item">
+    <div><div class="trust-num" style="font-size:14px;font-weight:700;letter-spacing:0;line-height:1.2">by<br>Junghanns</div><div class="trust-lbl">respaldo institucional</div></div>
+  </div>
+</div>
+
+<!-- COMPARACIÓN -->
+<section class="section" id="beneficios">
+  <div class="container">
+    <div class="rv" style="margin-bottom:0">
+      <p class="eyebrow" style="margin-bottom:12px">¿Por qué Simple?</p>
+      <h2 class="h2" style="margin-bottom:14px">Tu hogar merece agua sin límites</h2>
+      <p class="lead" style="max-width:520px">México consume más de 1,800 millones de garrafones al año. Hay una forma más inteligente, más limpia y más económica.</p>
+    </div>
+    <div class="cmp3-grid rv">
+      <div class="cmp3-col">
+        <div class="cmp3-header">
+          <div class="cmp3-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 2h6M5 2C5 2 4 5 4 8v7a1 1 0 001 1h8a1 1 0 001-1V8c0-3-1-6-1-6" stroke="#0F2336" stroke-width="1.3" stroke-linecap="round"/><path d="M7 11a2 2 0 104 0" stroke="#0F2336" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+          <div><div class="cmp3-tag">Evítalo</div><div class="cmp3-title">Garrafón tradicional</div></div>
+        </div>
+        <div class="cmp3-rows">
+          <div class="cmp3-row"><div class="cmp3-ico">✕</div><div><div class="cmp3-strong">Costo impredecible</div><div class="cmp3-desc">Entre $500 y $1,500/mes sin control ni trazabilidad del gasto.</div></div></div>
+          <div class="cmp3-row"><div class="cmp3-ico">✕</div><div><div class="cmp3-strong">Sin garantía de calidad</div><div class="cmp3-desc">No sabes qué hay en el agua ni cuándo se purificó.</div></div></div>
+          <div class="cmp3-row"><div class="cmp3-ico">✕</div><div><div class="cmp3-strong">Logística complicada</div><div class="cmp3-desc">Horarios de entrega, subir garrafones, almacenarlos en casa.</div></div></div>
+          <div class="cmp3-row"><div class="cmp3-ico">✕</div><div><div class="cmp3-strong">Huella de plástico enorme</div><div class="cmp3-desc">8+ garrafones por hogar al mes. Plástico que no desaparece.</div></div></div>
+        </div>
+        <div class="cmp3-pill"><span class="cmp3-pill-num">$800+</span><span class="cmp3-pill-txt">costo mensual real promedio</span></div>
+      </div>
+      <div class="cmp3-col">
+        <div class="cmp3-header">
+          <div class="cmp3-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#0F2336" stroke-width="1.3"/><path d="M9 6v4M9 12h.01" stroke="#0F2336" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+          <div><div class="cmp3-tag">Parece opción, no lo es</div><div class="cmp3-title">Filtro genérico (Amazon)</div></div>
+        </div>
+        <div class="cmp3-rows">
+          <div class="cmp3-row"><div class="cmp3-ico">⚠</div><div><div class="cmp3-strong">Costo inicial bajo, real alto</div><div class="cmp3-desc">$800–$2,500 de inicio, más cartuchos e instalación a largo plazo.</div></div></div>
+          <div class="cmp3-row"><div class="cmp3-ico">⚠</div><div><div class="cmp3-strong">Sin certeza de calidad</div><div class="cmp3-desc">Sin monitoreo. No sabes si el filtro venció ni qué tan limpia sale el agua.</div></div></div>
+          <div class="cmp3-row"><div class="cmp3-ico">⚠</div><div><div class="cmp3-strong">Instalación y mantenimiento tuyos</div><div class="cmp3-desc">Tú consigues instalador y recuerdas cambiar cartuchos cada 3–6 meses.</div></div></div>
+          <div class="cmp3-row"><div class="cmp3-ico">⚠</div><div><div class="cmp3-strong">Cero soporte ni respaldo</div><div class="cmp3-desc">Si falla, estás solo. Sin garantía real ni servicio técnico.</div></div></div>
+        </div>
+        <div class="cmp3-pill"><span class="cmp3-pill-num">+60%</span><span class="cmp3-pill-txt">costo oculto vs precio inicial en 2 años</span></div>
+      </div>
+      <div class="cmp3-col good">
+        <div class="cmp3-header">
+          <div class="cmp3-icon" style="background:rgba(163,169,131,.15)">
+            <svg width="18" height="18" viewBox="0 0 28 36" fill="none"><line x1="14" y1="3" x2="14" y2="33" stroke="#A3A983" stroke-width="2" stroke-linecap="round"/><path d="M13.5 7 C11 7 7.5 5.5 7.5 2.5 C7.5 0.5 9.5 -0.2 11.5 0.5 C13.2 1.2 13.5 3.5 13.5 5.5 Z" stroke="#A3A983" stroke-width="1.6" fill="none" stroke-linejoin="round" stroke-linecap="round"/><path d="M13.5 22 C11 22 7.5 20.5 7.5 17.5 C7.5 15.5 9.5 14.8 11.5 15.5 C13.2 16.2 13.5 18.5 13.5 20.5 Z" stroke="#A3A983" stroke-width="1.6" fill="none" stroke-linejoin="round" stroke-linecap="round"/><path d="M14.5 15 C17 15 20 13.5 20.5 10.5 C21 8.5 19.5 7.5 17.5 8 C15.8 8.5 14.5 10.5 14.5 13 Z" stroke="#A3A983" stroke-width="1.6" fill="none" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="cmp3-tag sage">Recomendado</div><div class="cmp3-title">Simple — todo incluido</div></div>
+        </div>
+        <div class="cmp3-rows">
+          <div class="cmp3-row"><div class="cmp3-ico">✓</div><div><div class="cmp3-strong">Costo fijo mensual</div><div class="cmp3-desc">Un solo pago. Sin instalación adicional, sin extras, sin sorpresas.</div></div></div>
+          <div class="cmp3-row"><div class="cmp3-ico">✓</div><div><div class="cmp3-strong">Calidad verificada en tiempo real</div><div class="cmp3-desc">Monitoreo inteligente desde la app 24/7. Ves el estado de tu agua siempre.</div></div></div>
+          <div class="cmp3-row"><div class="cmp3-ico">✓</div><div><div class="cmp3-strong">Agua directo del grifo</div><div class="cmp3-desc">Sin entregas ni almacenamiento. Tu grifo es la fuente, siempre disponible.</div></div></div>
+          <div class="cmp3-row"><div class="cmp3-ico">✓</div><div><div class="cmp3-strong">Cero plástico de un solo uso</div><div class="cmp3-desc">Evitas más de 100 garrafones al año. Menos huella, misma calidad premium.</div></div></div>
+        </div>
+        <div class="cmp3-pill"><span class="cmp3-pill-num">−40%</span><span class="cmp3-pill-txt">ahorro vs garrafón. Lo que gastas hoy alcanza para tener Simple en casa.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="section bg-gray" id="como-funciona">
+  <div class="container">
+    <div class="rv">
+      <p class="eyebrow" style="margin-bottom:12px">El proceso</p>
+      <h2 class="h2" style="margin-bottom:14px">Tres pasos. Sin complicaciones.</h2>
+      <p class="lead">Nosotros nos encargamos de todo. Tú solo disfrutas el agua.</p>
+    </div>
+    <div class="steps-grid rv">
+      <div class="step">
+        <div class="step-num">PASO 01</div>
+        <div class="step-ico"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="2" width="14" height="16" rx="2" stroke="#7A97AB" stroke-width="1.3"/><path d="M7 2V1a1 1 0 012 0v1M11 2V1a1 1 0 012 0v1" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/><path d="M6 9h8M6 12h5" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="step-h">Cotiza tu plan</div>
+        <div class="step-p">Llena el formulario. En menos de 24 horas un asesor te contacta con el plan ideal para ti.</div>
+        <div class="step-arr">→</div>
+      </div>
+      <div class="step">
+        <div class="step-num">PASO 02</div>
+        <div class="step-ico"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#7A97AB" stroke-width="1.3"/><path d="M7 10l2.5 2.5 4-4" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="step-h">Instalación en 72h</div>
+        <div class="step-p">Nuestro equipo instala el Simple One en tu domicilio. Rápido, limpio, sin obra.</div>
+        <div class="step-arr">→</div>
+      </div>
+      <div class="step">
+        <div class="step-num">PASO 03</div>
+        <div class="step-ico"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2C10 2 5 7.5 5 12a5 5 0 0010 0C15 7.5 10 2 10 2z" stroke="#7A97AB" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M7.5 13a2.5 2.5 0 002.5-2.5" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="step-h">Disfruta y olvida</div>
+        <div class="step-p">Agua de alta calidad 24/7. Monitoreamos de forma remota y gestionamos los recambios.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="container">
+    <div class="rv">
+      <p class="eyebrow" style="margin-bottom:12px">Tecnología Simple</p>
+      <h2 class="h2" style="margin-bottom:14px">Lo que incluye tu suscripción</h2>
+    </div>
+    <div class="feats-grid rv">
+      <div class="feat-card">
+        <div class="feat-ico"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 5c3 1 6 1 9 0s6-1 9 0M2 9c3 1 6 1 9 0s6-1 9 0M2 13c3 1 6 1 9 0s6-1 9 0M2 17c3 1 6 1 9 0s6-1 9 0" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="feat-h">Ósmosis inversa 4 etapas</div>
+        <div class="feat-p">Elimina el 99% de virus, bacterias, metales pesados y sólidos disueltos.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="6" y="6" width="10" height="10" rx="2" stroke="#7A97AB" stroke-width="1.3"/><path d="M9 6V4M12 6V4M9 18v-2M12 18v-2M4 9h2M4 12h2M16 9h2M16 12h2" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/><circle cx="11" cy="11" r="1.5" stroke="#A3A983" stroke-width="1.1"/></svg></div>
+        <div class="feat-h">Monitoreo inteligente desde la app</div>
+        <div class="feat-p">Consulta calidad del agua, consumo y estado del filtro desde tu teléfono, siempre.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="#7A97AB" stroke-width="1.3"/><path d="M11 2v2M11 18v2M2 11h2M18 11h2M4.93 4.93l1.41 1.41M15.66 15.66l1.41 1.41M4.93 17.07l1.41-1.41M15.66 6.34l1.41-1.41" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="feat-h">Mantenimiento preventivo</div>
+        <div class="feat-p">Recambios de cartuchos y soporte técnico incluidos. Sabemos cuándo actuar antes de que lo notes.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="5" width="18" height="12" rx="2" stroke="#7A97AB" stroke-width="1.3"/><path d="M2 9h18M5 14h4" stroke="#7A97AB" stroke-width="1.2" stroke-linecap="round"/><circle cx="17" cy="14" r="1.5" stroke="#A3A983" stroke-width="1.1"/></svg></div>
+        <div class="feat-h">Sin contrato forzoso</div>
+        <div class="feat-p">Pago mensual sin plazos mínimos. Cancela cuando quieras. El servicio habla por sí mismo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section bg-gray" id="testimonios">
+  <div class="container">
+    <div class="rv">
+      <p class="eyebrow" style="margin-bottom:12px">Clientes Simple</p>
+      <h2 class="h2" style="margin-bottom:14px">Ellas ya olvidaron el garrafón.</h2>
+    </div>
+    <div class="testi-layout rv">
+      <div>
+        <div class="testi-track" id="testiTrack">
+          <div class="testi-slide active">
+            <div class="testi-author"><div class="testi-avatar">D</div><div><div class="testi-name">Daniela</div><div class="testi-loc"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1C4.12 1 3 2.12 3 3.5c0 2.1 2.5 5.5 2.5 5.5S8 5.6 8 3.5C8 2.12 6.88 1 5.5 1z" stroke="#A3A983" stroke-width="1"/><circle cx="5.5" cy="3.5" r="1" stroke="#A3A983" stroke-width=".9"/></svg>Cuauhtémoc, CDMX</div></div></div>
+            <div class="testi-stars"><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg></div>
+            <div class="testi-quote">Me encanta Simple. Me olvidé de subir garrafones por las escaleras y siempre tengo agua rica y fresca.</div>
+          </div>
+          <div class="testi-slide">
+            <div class="testi-author"><div class="testi-avatar" style="background:var(--blue)">R</div><div><div class="testi-name">Reyna</div><div class="testi-loc"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1C4.12 1 3 2.12 3 3.5c0 2.1 2.5 5.5 2.5 5.5S8 5.6 8 3.5C8 2.12 6.88 1 5.5 1z" stroke="#A3A983" stroke-width="1"/><circle cx="5.5" cy="3.5" r="1" stroke="#A3A983" stroke-width=".9"/></svg>Polanco, CDMX</div></div></div>
+            <div class="testi-stars"><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg></div>
+            <div class="testi-quote">El proceso con Simple fue súper fácil. Llamé y en dos días ya tenía mi filtro instalado. Cinco estrellas.</div>
+          </div>
+          <div class="testi-slide">
+            <div class="testi-author"><div class="testi-avatar" style="background:var(--sage-dk)">G</div><div><div class="testi-name">Gisela</div><div class="testi-loc"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1C4.12 1 3 2.12 3 3.5c0 2.1 2.5 5.5 2.5 5.5S8 5.6 8 3.5C8 2.12 6.88 1 5.5 1z" stroke="#A3A983" stroke-width="1"/><circle cx="5.5" cy="3.5" r="1" stroke="#A3A983" stroke-width=".9"/></svg>Coyoacán, CDMX</div></div></div>
+            <div class="testi-stars"><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg><svg width="14" height="14" viewBox="0 0 14 14" fill="#A3A983"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z"/></svg></div>
+            <div class="testi-quote">Me encanta la app de Simple. Siempre veo cuántos litros consumo al día y el estado de mis filtros. Me da tranquilidad sobre lo que consume mi familia.</div>
+          </div>
+        </div>
+        <div class="testi-nav">
+          <div class="testi-dots">
+            <button class="testi-dot active" data-i="0"></button>
+            <button class="testi-dot" data-i="1"></button>
+            <button class="testi-dot" data-i="2"></button>
+          </div>
+          <div class="testi-arrows">
+            <button class="testi-arr" id="tPrev"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="testi-arr" id="tNext"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="testi-right">
+        <div class="testi-photo">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80&fit=crop&crop=center" alt="Simple One instalado en cocina moderna" onerror="this.style.display='none'"/>
+          <div class="testi-photo-badge"><div class="testi-photo-badge-dot"></div><span>Simple One instalado · listo en 72h</span></div>
+          <div class="testi-photo-tag">
+            <div class="testi-photo-tag-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C7 1 3 4.5 3 7.5a4 4 0 008 0C11 4.5 7 1 7 1z" stroke="#A3A983" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M5.5 8.5a1.5 1.5 0 001.5-1.5" stroke="#A3A983" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+            <div><div style="font-size:11px;font-weight:700;color:var(--text)">Simple One</div><div style="font-size:10px;color:var(--textsm)">Ósmosis inversa · app</div></div>
+          </div>
+        </div>
+        <div class="testi-stat"><div class="testi-stat-num">+500</div><div class="testi-stat-lbl">familias ya disfrutan agua Simple en CDMX</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="section bg-navy" id="cotiza">
+  <div class="container">
+    <div class="form-grid">
+      <div>
+        <p class="eyebrow" style="color:var(--sage-lt);margin-bottom:12px">Cotiza tu plan</p>
+        <h2 class="h2" style="color:#fff;margin-bottom:14px">Agua de alta calidad.<br>A tu medida.</h2>
+        <p class="lead" style="color:rgba(255,255,255,.5);max-width:400px">En menos de 24 horas te contactamos con el plan que mejor se adapta. Sin compromisos.</p>
+        <div class="form-promises">
+          <div class="form-promise"><div class="form-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#C5C7A5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Respuesta garantizada en menos de 24 horas</div>
+          <div class="form-promise"><div class="form-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#C5C7A5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Asesoría sin costo y sin presión</div>
+          <div class="form-promise"><div class="form-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#C5C7A5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Planes residenciales desde $369/mes todo incluido</div>
+          <div class="form-promise"><div class="form-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#C5C7A5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Planes B2B con cotización personalizada</div>
+          <div class="form-promise"><div class="form-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#C5C7A5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación en menos de 72 horas hábiles</div>
+        </div>
+      </div>
+      <div>
+        <div class="form-card">
+          <div class="form-card-h">Quiero cotizar mi plan</div>
+          <div class="form-card-sub">Selecciona el tipo de uso y completa tus datos.</div>
+          <div class="seg-row">
+            <button type="button" class="seg-btn on" id="btnRes">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 6.5L7 2l5 4.5V12a1 1 0 01-1 1H3a1 1 0 01-1-1V6.5z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 13V8.5h4V13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Residencial
+            </button>
+            <button type="button" class="seg-btn" id="btnBiz">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="3" width="11" height="10" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 3V2a1 1 0 011-1h3a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1.5 7h11M5 7v3M9 7v3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+              Empresarial
+            </button>
+          </div>
+          <form id="cotizaForm">
+            <div class="frow">
+              <div class="fgrp"><label class="flbl">Nombre</label><input class="finput" type="text" placeholder="Tu nombre" required></div>
+              <div class="fgrp"><label class="flbl">Apellido</label><input class="finput" type="text" placeholder="Tu apellido" required></div>
+            </div>
+            <div class="fgrp"><label class="flbl">WhatsApp / Teléfono</label><input class="finput" type="tel" placeholder="55 0000 0000" required></div>
+            <div class="fgrp"><label class="flbl">Correo electrónico</label><input class="finput" type="email" placeholder="tu@correo.com" required></div>
+            <div class="fgrp" id="zonaGrp"><label class="flbl">Código Postal</label><input class="finput" type="text" placeholder="Ej. 06600" maxlength="5" inputmode="numeric"></div>
+            <div class="fgrp" id="bizGrp" style="display:none"><label class="flbl">Nombre de la empresa</label><input class="finput" type="text" placeholder="Tu empresa u oficina"></div>
+            <div class="fgrp" id="personasGrp" style="display:none">
+              <label class="flbl">¿Cuántas personas consumen el agua?</label>
+              <select class="fsel"><option value="">Selecciona</option><option>1–10 personas</option><option>11–30 personas</option><option>30+ personas</option></select>
+            </div>
+            <button type="submit" class="btn-form">Ver mi cotización →</button>
+            <div class="form-note">Sin costo ni compromiso · Respuesta en menos de 24h</div>
+          </form>
+          <div class="success-box" id="successBox">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="margin:0 auto 12px"><path d="M20 4C20 4 10 16 10 25a10 10 0 0020 0C30 16 20 4 20 4z" stroke="#A3A983" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M15 27a5 5 0 005-5" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round"/></svg>
+            <div class="s-h">¡Recibimos tu solicitud!</div>
+            <div class="s-p">Un asesor te contactará en menos de 24 horas vía WhatsApp con tu cotización personalizada.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECO -->
+<section style="background:var(--sage)">
+  <div class="container">
+    <div class="eco-grid rv">
+      <div class="eco-h">Cuidar el planeta<br>también es simple.</div>
+      <div class="eco-stat"><div class="eco-num">−100</div><div class="eco-lbl">garrafones de plástico evitados por hogar cada año</div></div>
+      <div class="eco-stat"><div class="eco-num">−90%</div><div class="eco-lbl">de huella de carbono relacionada al agua embotellada</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="rv" style="text-align:center">
+      <p class="eyebrow" style="justify-content:center;margin-bottom:12px">Preguntas frecuentes</p>
+      <h2 class="h2">Todo lo que necesitas saber</h2>
+    </div>
+    <div class="faq-wrap rv">
+      <div class="faq-item"><div class="faq-q">¿Qué incluye exactamente la suscripción mensual?<div class="faq-ico">+</div></div><div class="faq-a">La suscripción incluye el equipo Simple One sin costo inicial, instalación técnica, mantenimiento preventivo, recambios de cartuchos, monitoreo inteligente desde la app 24/7, soporte técnico y acceso a la app Simple. Todo en un solo pago mensual fijo.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Hay contrato mínimo de permanencia?<div class="faq-ico">+</div></div><div class="faq-a">No. Simple opera sin contratos forzosos. El pago es mensual y puedes cancelar cuando lo decidas. Si decides terminar, coordinamos el retiro del equipo sin cargos adicionales.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Cómo funciona el monitoreo desde la app?<div class="faq-ico">+</div></div><div class="faq-a">Cada Simple One incluye un sensor inteligente que transmite en tiempo real datos sobre calidad del agua, litros consumidos y estado del sistema. Tú lo ves desde la app. Nosotros también monitoreamos remotamente y actuamos de forma preventiva.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Cuánto tiempo tarda la instalación?<div class="faq-ico">+</div></div><div class="faq-a">La instalación se agenda dentro de las 72 horas hábiles. El proceso en tu domicilio toma aproximadamente 2 horas. Nuestras técnicas están uniformadas, identificadas y certificadas.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Tienen planes para empresas y oficinas?<div class="faq-ico">+</div></div><div class="faq-a">Sí. Contamos con planes B2B para oficinas, coworkings y espacios comerciales. Selecciona "Empresarial" en el formulario y te preparamos una propuesta personalizada.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Cómo sé que el agua realmente es de alta calidad?<div class="faq-ico">+</div></div><div class="faq-a">El Simple One usa ósmosis inversa en 4 etapas — elimina el 99% de virus, bacterias y metales pesados. El monitoreo inteligente desde la app te da acceso a los parámetros de calidad en tiempo real con total transparencia.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <span class="ft-name">simple</span>
+        <div class="ft-desc">Agua de alta calidad para tu hogar y oficina. Tecnología de filtración avanzada, servicio sin complicaciones.</div>
+        <div class="ft-by">by Junghanns · +30 años en el mercado del agua</div>
+      </div>
+      <div class="ft-cols">
+        <div class="ft-col"><div class="ft-col-h">Producto</div><ul><li><a href="suscripcion.html#como-funciona">Cómo funciona</a></li><li><a href="#beneficios">Beneficios</a></li><li><a href="suscripcion.html#planes">Planes residenciales</a></li><li><a href="suscripcion.html#planes">Planes empresariales</a></li></ul></div>
+        <div class="ft-col"><div class="ft-col-h">Empresa</div><ul><li><a href="equipo.html">Nosotros</a></li><li><a href="blog.html">Blog</a></li><li><a href="sostenibilidad.html">Sostenibilidad</a></li><li><a href="equipo.html#unirse">Trabaja con nosotros</a></li></ul></div>
+        <div class="ft-col"><div class="ft-col-h">Contacto</div><ul><li><a href="mailto:hola@simpletuagua.com">hola@simpletuagua.com</a></li><li><a href="tel:8009539899">800 953 9899</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Atención al cliente</a></li></ul></div>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <div class="ft-copy">© 2025 Colere Water, S.A.P.I. de C.V. — Todos los derechos reservados.</div>
+      <div class="ft-legal"><a href="#">Aviso de Privacidad</a><a href="#">Términos y Condiciones</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  document.querySelectorAll('.nav-drop-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = btn.classList.contains('open');
+      document.querySelectorAll('.nav-drop-btn').forEach(function(b) {
+        b.classList.remove('open');
+        b.closest('.nav-item').querySelector('.nav-dropdown').classList.remove('open');
+      });
+      if (!open) { btn.classList.add('open'); btn.closest('.nav-item').querySelector('.nav-dropdown').classList.add('open'); }
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('.nav-drop-btn').forEach(function(b) {
+      b.classList.remove('open');
+      b.closest('.nav-item').querySelector('.nav-dropdown').classList.remove('open');
+    });
+  });
+
+  var ham = document.getElementById('navHam');
+  var mm  = document.getElementById('mobMenu');
+  ham.addEventListener('click', function() { ham.classList.toggle('open'); mm.classList.toggle('open'); });
+  mm.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', function() { ham.classList.remove('open'); mm.classList.remove('open'); }); });
+
+  var btnRes = document.getElementById('btnRes');
+  var btnBiz = document.getElementById('btnBiz');
+  function setSeg(type) {
+    document.querySelectorAll('.seg-btn').forEach(function(b) { b.classList.remove('on'); });
+    (type === 'res' ? btnRes : btnBiz).classList.add('on');
+    var biz  = document.getElementById('bizGrp');
+    var zona = document.getElementById('zonaGrp');
+    var pers = document.getElementById('personasGrp');
+    if (biz)  biz.style.display  = type === 'biz' ? 'block' : 'none';
+    if (zona) zona.style.display  = type === 'res' ? 'block' : 'none';
+    if (pers) pers.style.display  = type === 'biz' ? 'block' : 'none';
+  }
+  btnRes.addEventListener('click', function() { setSeg('res'); });
+  btnBiz.addEventListener('click', function() { setSeg('biz'); });
+
+  var form = document.getElementById('cotizaForm');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    form.style.display = 'none';
+    document.getElementById('successBox').style.display = 'block';
+  });
+
+  var cur    = 0;
+  var slides = document.querySelectorAll('.testi-slide');
+  var dots   = document.querySelectorAll('.testi-dot');
+  function goSlide(n) {
+    slides[cur].classList.remove('active');
+    dots[cur].classList.remove('active');
+    cur = (n + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+  }
+  dots.forEach(function(d) { d.addEventListener('click', function() { goSlide(parseInt(d.dataset.i)); }); });
+  document.getElementById('tPrev').addEventListener('click', function() { goSlide(cur - 1); });
+  document.getElementById('tNext').addEventListener('click', function() { goSlide(cur + 1); });
+  setInterval(function() { goSlide(cur + 1); }, 5000);
+
+  document.querySelectorAll('.faq-q').forEach(function(q) {
+    q.addEventListener('click', function() {
+      var item = q.closest('.faq-item');
+      var open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+      if (!open) item.classList.add('open');
+    });
+  });
+
+  var obs = new IntersectionObserver(function(es) {
+    es.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
+
+  window.addEventListener('scroll', function() {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+});
+</script>
+</body>
+</html>

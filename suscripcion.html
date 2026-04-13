@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suscripción Simple — Agua sin complicaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:    #0F2336;
+  --blue:    #7A97AB;
+  --sage:    #A3A983;
+  --sage-dk: #7A7E5E;
+  --sage-lt: #C5C7A5;
+  --white:   #FFFFFF;
+  --gray-50: #F7F8FA;
+  --gray-100:#F0F2F5;
+  --gray-200:#E4E7EC;
+  --gray-400:#9AA5B4;
+  --text:    #0F2336;
+  --text-md: #374151;
+  --text-sm: #6B7280;
+  --border:  #E5E7EB;
+  --radius:  10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+/* ── NAV (same as landing) ── */
+.nav {
+  position: fixed; inset: 0 0 auto 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 64px;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { display: flex; align-items: center; gap: 8px; }
+.nav-wordmark { font-size: 20px; font-weight: 300; color: var(--navy); letter-spacing: -0.3px; }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.btn-nav-ghost { font-size: 13px; font-weight: 500; color: var(--text-md); padding: 9px 16px; border-radius: var(--radius); border: 1.5px solid var(--border); background: #fff; transition: all .15s; }
+.btn-nav-ghost:hover { border-color: var(--gray-400); }
+.btn-nav-primary { font-size: 13px; font-weight: 600; color: #fff; padding: 10px 20px; border-radius: var(--radius); background: var(--navy); transition: background .15s; }
+.btn-nav-primary:hover { background: #0a1a28; }
+
+/* Breadcrumb */
+.breadcrumb { padding: 80px 48px 0; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-sm); }
+.breadcrumb a { color: var(--text-sm); transition: color .15s; }
+.breadcrumb a:hover { color: var(--text); }
+.breadcrumb-sep { color: var(--gray-400); }
+.breadcrumb-cur { color: var(--text); font-weight: 500; }
+
+/* ── LAYOUT ── */
+.container { max-width: 1140px; margin: 0 auto; padding: 0 48px; }
+.section    { padding: 80px 0; }
+.bg-gray    { background: var(--gray-50); }
+.bg-navy    { background: var(--navy); }
+.bg-sage    { background: var(--sage); }
+
+/* ── HERO ── */
+.hero {
+  padding: 32px 0 0;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; }
+.hero-content { padding: 48px 0 64px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--sage-dk); margin-bottom: 20px;
+}
+.hero-eyebrow::before { content: ''; width: 18px; height: 1.5px; background: var(--sage); }
+.hero-h1 { font-size: clamp(36px, 4.5vw, 56px); font-weight: 800; line-height: 1.06; letter-spacing: -1.5px; color: var(--text); margin-bottom: 18px; }
+.hero-h1 em { font-style: normal; color: var(--blue); }
+.hero-lead { font-size: 16px; line-height: 1.72; color: var(--text-md); margin-bottom: 36px; max-width: 440px; }
+.hero-actions { display: flex; align-items: center; gap: 12px; }
+.btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--navy); color: #fff; padding: 13px 26px; border-radius: var(--radius); font-size: 14px; font-weight: 600; border: none; transition: background .15s, transform .15s, box-shadow .15s; }
+.btn-primary:hover { background: #0a1a28; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(15,35,54,.18); }
+.btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--text); padding: 13px 26px; border-radius: var(--radius); font-size: 14px; font-weight: 600; border: 1.5px solid var(--border); transition: all .15s; }
+.btn-secondary:hover { border-color: var(--gray-400); background: var(--gray-50); }
+
+.hero-img {
+  position: relative; align-self: end;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.hero-product-wrap {
+  width: 100%; max-width: 440px;
+  background: linear-gradient(160deg, var(--gray-50) 0%, var(--gray-100) 100%);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 48px 32px 0;
+  display: flex; align-items: flex-end; justify-content: center;
+  overflow: hidden; position: relative; min-height: 340px;
+}
+/* SVG product illustration — Simple One box */
+.product-svg { width: 200px; position: relative; z-index: 2; }
+.product-glow {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 280px; height: 120px;
+  background: radial-gradient(ellipse, rgba(122,151,171,.18) 0%, transparent 70%);
+}
+/* Floating stat chips */
+.chip {
+  position: absolute; background: #fff;
+  border: 1px solid var(--border); border-radius: 100px;
+  padding: 8px 14px; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.07); white-space: nowrap;
+}
+.chip-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.chip-label { font-size: 12px; font-weight: 600; color: var(--text); }
+.chip-sub   { font-size: 11px; color: var(--text-sm); }
+.chip-1 { top: 40px; left: -20px; }
+.chip-2 { top: 120px; right: -24px; }
+.chip-3 { bottom: 60px; left: -16px; }
+
+/* ── TRUST NUMBERS ── */
+.trust-nums {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.tn-item { padding: 32px 36px; border-right: 1px solid var(--border); }
+.tn-item:last-child { border-right: none; }
+.tn-num { font-size: 36px; font-weight: 800; color: var(--text); letter-spacing: -1.5px; margin-bottom: 4px; }
+.tn-lbl { font-size: 13px; color: var(--text-sm); line-height: 1.4; }
+
+/* ── FEATURE ROWS (Savio style: alternating) ── */
+.feat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; padding: 80px 0; border-bottom: 1px solid var(--border); }
+.feat-row.reverse { direction: rtl; }
+.feat-row.reverse > * { direction: ltr; }
+.feat-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--sage-dk); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.feat-eyebrow::before { content: ''; width: 16px; height: 1.5px; background: var(--sage); }
+.feat-h { font-size: clamp(22px, 2.8vw, 32px); font-weight: 800; letter-spacing: -0.8px; color: var(--text); line-height: 1.15; margin-bottom: 14px; }
+.feat-p { font-size: 15px; line-height: 1.72; color: var(--text-md); margin-bottom: 28px; }
+.feat-checks { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+.feat-check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-md); line-height: 1.5; }
+.chk-ico { width: 20px; height: 20px; border-radius: 50%; background: rgba(163,169,131,.15); border: 1px solid rgba(163,169,131,.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+/* Feature visual panels */
+.feat-panel {
+  border-radius: var(--radius-xl); overflow: hidden;
+  aspect-ratio: 4/3; position: relative;
+  background: var(--gray-50); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+}
+.feat-panel-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 32px; position: relative; }
+
+/* ── FILTRATION PROCESS ── */
+.process-section { padding: 80px 0; }
+.sec-hdr { margin-bottom: 56px; }
+.sec-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--sage-dk); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.sec-eyebrow::before { content: ''; width: 18px; height: 1.5px; background: var(--sage); }
+.sec-h2 { font-size: clamp(26px, 3.2vw, 40px); font-weight: 800; letter-spacing: -1px; color: var(--text); line-height: 1.1; margin-bottom: 12px; }
+.sec-p  { font-size: 15px; line-height: 1.7; color: var(--text-md); max-width: 540px; }
+
+.stages-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; background: var(--border); border-radius: var(--radius-xl); overflow: hidden; margin-bottom: 48px; }
+.stage { background: #fff; padding: 32px 24px; position: relative; transition: background .2s; }
+.stage:hover { background: var(--gray-50); }
+.stage-num { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); margin-bottom: 20px; }
+.stage-circle {
+  width: 72px; height: 72px; border-radius: 50%;
+  margin-bottom: 18px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.stage-h { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: -0.2px; }
+.stage-p { font-size: 12px; line-height: 1.6; color: var(--text-sm); }
+.stage-tag {
+  margin-top: 14px; display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(163,169,131,.12); border: 1px solid rgba(163,169,131,.25);
+  border-radius: 100px; padding: 4px 10px;
+  font-size: 11px; font-weight: 600; color: var(--sage-dk);
+}
+
+/* Stage circle colors matching the image */
+.c1 { background: radial-gradient(circle at 40% 40%, #6A8FAB, #3A5F7A); }
+.c2 { background: radial-gradient(circle at 40% 40%, #4A7A8A, #2A5060); }
+.c3 { background: radial-gradient(circle at 40% 40%, #4AABB5, #1A7A85); }
+.c4 { background: radial-gradient(circle at 40% 40%, #5ABFCC, #2A8FA0); }
+
+/* Dots on circles */
+.c1::after, .c2::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background-image: radial-gradient(circle, rgba(255,255,255,.3) 2px, transparent 2px); background-size: 12px 12px; }
+
+/* Arrow connector */
+.stage:not(:last-child)::after {
+  content: '→'; position: absolute; right: -12px; top: 50%;
+  transform: translateY(-50%); font-size: 16px; color: var(--gray-400); z-index: 2;
+  background: #fff; width: 24px; height: 24px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; border: 1px solid var(--border);
+}
+
+/* Result bar */
+.result-bar {
+  background: var(--navy); border-radius: var(--radius-xl); padding: 32px 40px;
+  display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  gap: 24px; align-items: center;
+}
+.result-item { text-align: center; }
+.result-num { font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 4px; }
+.result-lbl { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.4; }
+.result-div { width: 1px; height: 40px; background: rgba(255,255,255,.1); }
+
+/* ── PLANES ── */
+.plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 48px; }
+.plan-card {
+  border: 1.5px solid var(--border); border-radius: var(--radius-xl);
+  padding: 32px 28px; position: relative; background: #fff;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+.plan-card:hover { border-color: var(--blue); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(122,151,171,.12); }
+.plan-card.featured { border-color: var(--navy); border-width: 2px; }
+.plan-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--navy); color: #fff;
+  font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 100px; white-space: nowrap;
+}
+.plan-name  { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+.plan-price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px; }
+.plan-num   { font-size: 40px; font-weight: 800; color: var(--text); letter-spacing: -1.5px; }
+.plan-per   { font-size: 14px; color: var(--text-sm); }
+.plan-desc  { font-size: 13px; color: var(--text-sm); margin-bottom: 24px; line-height: 1.5; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.plan-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.plan-feat { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-md); }
+.plan-feat-ico { width: 18px; height: 18px; border-radius: 50%; background: rgba(163,169,131,.15); border: 1px solid rgba(163,169,131,.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+.btn-plan {
+  display: block; width: 100%; text-align: center;
+  padding: 13px; border-radius: var(--radius); font-size: 13px; font-weight: 700;
+  transition: all .15s; border: 1.5px solid var(--navy); cursor: pointer;
+}
+.btn-plan.outline { color: var(--navy); background: #fff; }
+.btn-plan.outline:hover { background: var(--navy); color: #fff; }
+.btn-plan.filled  { color: #fff; background: var(--navy); }
+.btn-plan.filled:hover  { background: #0a1a28; }
+
+.plans-note { text-align: center; font-size: 13px; color: var(--text-sm); margin-top: 20px; }
+
+/* ── COMPARISON TABLE ── */
+.cmp-table { width: 100%; border-collapse: collapse; margin-top: 48px; }
+.cmp-table th { padding: 14px 20px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-sm); border-bottom: 2px solid var(--border); }
+.cmp-table th:not(:first-child) { text-align: center; }
+.cmp-table td { padding: 14px 20px; font-size: 14px; color: var(--text-md); border-bottom: 1px solid var(--border); }
+.cmp-table td:not(:first-child) { text-align: center; }
+.cmp-table tr:last-child td { border-bottom: none; }
+.cmp-table tr:hover td { background: var(--gray-50); }
+.cmp-table td:first-child { font-weight: 500; color: var(--text); }
+.cmp-yes { color: var(--sage-dk); font-weight: 700; font-size: 16px; }
+.cmp-no  { color: var(--gray-400); font-size: 16px; }
+.cmp-head { background: var(--gray-50); }
+.cmp-head th:nth-child(3) { background: rgba(15,35,54,.04); border-radius: 8px 8px 0 0; }
+
+/* ── FAQ ── */
+.faq-wrap { max-width: 700px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-q { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; cursor: pointer; font-size: 15px; font-weight: 600; color: var(--text); user-select: none; letter-spacing: -0.1px; }
+.faq-ico { width: 26px; height: 26px; flex-shrink: 0; border: 1.5px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-sm); transition: transform .22s, background .18s; }
+.faq-item.open .faq-ico { transform: rotate(45deg); background: var(--navy); border-color: var(--navy); color: #fff; }
+.faq-a { font-size: 14px; line-height: 1.72; color: var(--text-sm); max-height: 0; overflow: hidden; transition: max-height .32s ease, padding-bottom .22s; }
+.faq-item.open .faq-a { max-height: 300px; padding-bottom: 18px; }
+
+/* ── CTA BANNER ── */
+.cta-banner { border-radius: var(--radius-xl); background: var(--navy); padding: 64px; display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
+.cta-h { font-size: clamp(24px, 3vw, 36px); font-weight: 800; color: #fff; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 10px; }
+.cta-p { font-size: 15px; color: rgba(255,255,255,.5); line-height: 1.6; }
+.cta-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+.btn-sage { display: inline-flex; align-items: center; gap: 8px; background: var(--sage); color: #fff; padding: 14px 28px; border-radius: var(--radius); font-size: 14px; font-weight: 700; border: none; transition: background .15s; white-space: nowrap; }
+.btn-sage:hover { background: var(--sage-dk); }
+.btn-white-ghost { font-size: 13px; color: rgba(255,255,255,.45); text-align: center; transition: color .15s; }
+.btn-white-ghost:hover { color: rgba(255,255,255,.8); }
+
+/* ── FOOTER (minimal) ── */
+footer { background: var(--navy); padding: 40px 0 28px; border-top: 1px solid rgba(255,255,255,.06); }
+.ft-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.ft-name { font-size: 18px; font-weight: 300; color: #fff; letter-spacing: -0.3px; }
+.ft-links { display: flex; gap: 24px; }
+.ft-links a { font-size: 13px; color: rgba(255,255,255,.35); transition: color .15s; }
+.ft-links a:hover { color: rgba(255,255,255,.7); }
+.ft-copy { font-size: 12px; color: rgba(255,255,255,.18); margin-top: 20px; }
+
+/* ── REVEAL ── */
+.rv { opacity: 0; transform: translateY(16px); transition: opacity .55s ease, transform .55s ease; }
+.rv.in { opacity: 1; transform: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .nav { padding: 0 24px; }
+  .container { padding: 0 24px; }
+  .breadcrumb { padding: 80px 24px 0; }
+  .hero-inner, .feat-row, .cta-banner { grid-template-columns: 1fr; gap: 40px; }
+  .feat-row.reverse { direction: ltr; }
+  .hero-img { display: none; }
+  .trust-nums { grid-template-columns: 1fr 1fr; }
+  .tn-item { border-bottom: 1px solid var(--border); }
+  .stages-grid { grid-template-columns: 1fr 1fr; }
+  .plans-grid { grid-template-columns: 1fr; }
+  .result-bar { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .result-div { display: none; }
+  .cta-actions { align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════ -->
+<nav class="nav">
+  <a href="simple-landing.html" class="nav-logo">
+    <svg width="22" height="28" viewBox="0 0 28 36" fill="none">
+      <line x1="14" y1="3" x2="14" y2="33" stroke="#A3A983" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M13.5 7 C11 7 7.5 5.5 7.5 2.5 C7.5 0.5 9.5 -0.2 11.5 0.5 C13.2 1.2 13.5 3.5 13.5 5.5 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M13.5 22 C11 22 7.5 20.5 7.5 17.5 C7.5 15.5 9.5 14.8 11.5 15.5 C13.2 16.2 13.5 18.5 13.5 20.5 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M14.5 15 C17 15 20 13.5 20.5 10.5 C21 8.5 19.5 7.5 17.5 8 C15.8 8.5 14.5 10.5 14.5 13 Z" stroke="#A3A983" stroke-width="1.4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-wordmark">simple</span>
+  </a>
+  <div class="nav-right">
+    <a href="simple-landing.html" class="btn-nav-ghost">← Inicio</a>
+    <a href="#planes" class="btn-nav-primary">Ver planes</a>
+  </div>
+</nav>
+
+<div style="padding-top:80px"></div>
+
+<!-- ══ FEATURE ROW 1 — IoT ══════════════════ -->
+<div class="container">
+  <div class="feat-row rv">
+    <div>
+      <div class="feat-eyebrow">Monitoreo inteligente</div>
+      <h2 class="feat-h">Sabes exactamente qué hay en tu agua, en tiempo real.</h2>
+      <p class="feat-p">El Simple One transmite datos continuamente a través de su tarjeta IoT integrada. Consulta calidad del agua, litros consumidos y estado de los filtros directamente desde la app.</p>
+      <div class="feat-checks">
+        <div class="feat-check"><div class="chk-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Nivel de TDS (sólidos disueltos) en tiempo real</div>
+        <div class="feat-check"><div class="chk-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Consumo diario y mensual en litros</div>
+        <div class="feat-check"><div class="chk-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Estado de los 4 cartuchos de filtrado</div>
+        <div class="feat-check"><div class="chk-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Alertas automáticas cuando se requiere mantenimiento</div>
+      </div>
+      <a href="#planes" class="btn-primary" style="display:inline-flex">Cotizar mi plan →</a>
+    </div>
+    <div class="feat-panel">
+      <div class="feat-panel-inner">
+        <!-- App mockup -->
+        <div style="background:#fff;border-radius:24px;width:200px;padding:20px;box-shadow:0 20px 60px rgba(15,35,54,.12);border:1px solid var(--border)">
+          <div style="font-size:10px;font-weight:700;color:var(--text-sm);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">App Simple</div>
+          <div style="font-size:18px;font-weight:800;color:var(--text);letter-spacing:-0.5px;margin-bottom:16px">Tu agua hoy</div>
+          <div style="background:var(--gray-50);border-radius:14px;padding:16px;margin-bottom:12px">
+            <div style="font-size:10px;color:var(--text-sm);margin-bottom:4px">Calidad del agua</div>
+            <div style="font-size:28px;font-weight:800;color:#A3A983;letter-spacing:-1px">Óptima</div>
+            <div style="font-size:11px;color:var(--text-sm)">TDS: 12 ppm · pH: 7.2</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="background:rgba(122,151,171,.08);border-radius:10px;padding:12px">
+              <div style="font-size:18px;font-weight:800;color:var(--blue)">14L</div>
+              <div style="font-size:10px;color:var(--text-sm)">consumidos hoy</div>
+            </div>
+            <div style="background:rgba(163,169,131,.08);border-radius:10px;padding:12px">
+              <div style="font-size:18px;font-weight:800;color:var(--sage)">98%</div>
+              <div style="font-size:10px;color:var(--text-sm)">filtros OK</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURE ROW 2 — Mantenimiento -->
+  <div class="feat-row reverse rv">
+    <div>
+      <div class="feat-eyebrow">Mantenimiento preventivo</div>
+      <h2 class="feat-h">Nosotros sabemos cuándo actuar. Tú no haces nada.</h2>
+      <p class="feat-p">Monitoreamos tu equipo de forma remota. Cuando un cartucho se acerca a su límite, agendamos el recambio proactivamente. Sin llamadas, sin esperas.</p>
+      <div class="feat-checks">
+        <div class="feat-check"><div class="chk-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Recambio de cartuchos incluido en la suscripción</div>
+        <div class="feat-check"><div class="chk-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Visita técnica sin costo adicional</div>
+        <div class="feat-check"><div class="chk-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Diagnóstico remoto antes de cada visita</div>
+        <div class="feat-check"><div class="chk-ico"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#A3A983" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Soporte técnico 24/7 por WhatsApp</div>
+      </div>
+      <a href="#planes" class="btn-primary" style="display:inline-flex">Cotizar mi plan →</a>
+    </div>
+    <div class="feat-panel" style="background:linear-gradient(135deg,#0F2336,#1B3A52)">
+      <div class="feat-panel-inner" style="flex-direction:column;gap:12px;align-items:flex-start;padding:32px">
+        <!-- Timeline de mantenimiento -->
+        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px">Próximo mantenimiento</div>
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+          <div style="background:rgba(255,255,255,.07);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+            <div style="width:8px;height:8px;border-radius:50%;background:#A3A983;flex-shrink:0"></div>
+            <div><div style="font-size:13px;font-weight:600;color:#fff">Cartucho E1 — Sedimentos</div><div style="font-size:11px;color:rgba(255,255,255,.4)">Recambio en ~45 días · Estado: 78%</div></div>
+          </div>
+          <div style="background:rgba(255,255,255,.07);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+            <div style="width:8px;height:8px;border-radius:50%;background:#7A97AB;flex-shrink:0"></div>
+            <div><div style="font-size:13px;font-weight:600;color:#fff">Membrana de ósmosis E3</div><div style="font-size:11px;color:rgba(255,255,255,.4)">Recambio en ~8 meses · Estado: 94%</div></div>
+          </div>
+          <div style="background:rgba(163,169,131,.15);border:1px solid rgba(163,169,131,.25);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l1.5 4h4l-3.3 2.4 1.3 4L7 9l-3.5 2.4 1.3-4L1.5 5h4z" fill="#C5C7A5"/></svg>
+            <div style="font-size:12px;color:#C5C7A5;font-weight:500">Simple te contactará automáticamente para agendar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PROCESO DE FILTRACIÓN ════════════════ -->
+<section class="process-section bg-gray" id="proceso">
+  <div class="container">
+    <div class="sec-hdr rv">
+      <div class="sec-eyebrow">Tecnología de filtración</div>
+      <h2 class="sec-h2">4 etapas de purificación.<br>Un resultado inigualable.</h2>
+      <p class="sec-p">Nuestro proceso superior de ósmosis inversa contempla 4 etapas de filtrado para eliminar el 99% de contaminantes del agua de la red.</p>
+    </div>
+
+    <div class="stages-grid rv">
+      <div class="stage">
+        <div class="stage-num">ETAPA 01</div>
+        <div class="stage-circle c1">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="10" cy="8" r="2" fill="rgba(255,255,255,.5)"/><circle cx="18" cy="12" r="1.5" fill="rgba(255,255,255,.4)"/><circle cx="8" cy="17" r="2.5" fill="rgba(255,255,255,.3)"/><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,.6)"/><circle cx="14" cy="6" r="1" fill="rgba(255,255,255,.5)"/></svg>
+        </div>
+        <div class="stage-h">Sedimentos</div>
+        <div class="stage-p">Retiene partículas suspendidas, pedimentos, óxido e impurezas visibles.</div>
+        <div class="stage-tag">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#7A7E5E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          5 micras
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-num">ETAPA 02</div>
+        <div class="stage-circle c2">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="9" cy="9" r="2.5" fill="rgba(255,255,255,.4)"/><circle cx="19" cy="9" r="2" fill="rgba(255,255,255,.3)"/><circle cx="9" cy="19" r="2" fill="rgba(255,255,255,.5)"/><circle cx="19" cy="19" r="2.5" fill="rgba(255,255,255,.3)"/><circle cx="14" cy="14" r="3" fill="rgba(255,255,255,.2)"/></svg>
+        </div>
+        <div class="stage-h">Carbón Activado</div>
+        <div class="stage-p">Elimina materia orgánica, malos olores, sabores y cloro residual del agua municipal.</div>
+        <div class="stage-tag">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#7A7E5E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Adsorción
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-num">ETAPA 03</div>
+        <div class="stage-circle c3">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="8" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/><circle cx="14" cy="14" r="4" fill="rgba(255,255,255,.2)"/></svg>
+        </div>
+        <div class="stage-h">Ósmosis Inversa</div>
+        <div class="stage-p">Membrana semipermeable que elimina el 99% de virus, bacterias y metales pesados.</div>
+        <div class="stage-tag">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#7A7E5E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          0.0001 micras
+        </div>
+      </div>
+      <div class="stage">
+        <div class="stage-num">ETAPA 04</div>
+        <div class="stage-circle c4">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="9" fill="rgba(255,255,255,.15)"/><circle cx="14" cy="14" r="5" fill="rgba(255,255,255,.2)"/></svg>
+        </div>
+        <div class="stage-h">Carbón de Coco</div>
+        <div class="stage-p">Post-filtro que mejora el sabor final del agua y elimina trazas residuales.</div>
+        <div class="stage-tag">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="#7A7E5E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Polishing
+        </div>
+      </div>
+    </div>
+
+    <!-- Result bar -->
+    <div class="result-bar rv">
+      <div class="result-item"><div class="result-num">99%</div><div class="result-lbl">Virus y bacterias eliminados</div></div>
+      <div class="result-div"></div>
+      <div class="result-item"><div class="result-num">100%</div><div class="result-lbl">Metales pesados removidos</div></div>
+      <div class="result-div"></div>
+      <div class="result-item"><div class="result-num">0</div><div class="result-lbl">Cloro residual en el agua</div></div>
+      <div class="result-div"></div>
+      <div class="result-item"><div class="result-num">7.2</div><div class="result-lbl">pH promedio óptimo para consumo</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PLANES ══════════════════════════════ -->
+<section class="section" id="planes">
+  <div class="container">
+    <div class="sec-hdr rv" style="text-align:center">
+      <div class="sec-eyebrow" style="justify-content:center">Precios y planes</div>
+      <h2 class="sec-h2">Elige el plan que se adapta a ti</h2>
+      <p class="sec-p" style="margin:0 auto;text-align:center">Sin contrato forzoso. Sin costos de instalación. Todo incluido en un pago mensual fijo.</p>
+    </div>
+
+    <!-- Toggle residencial / negocio -->
+    <div style="display:flex;justify-content:center;margin:36px 0 40px">
+      <div style="display:inline-flex;background:var(--gray-100);border-radius:12px;padding:4px;gap:4px">
+        <button type="button" id="tabRes" onclick="showTab('res')" style="padding:10px 28px;border-radius:9px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:var(--navy);color:#fff;transition:all .18s">
+          Residencial
+        </button>
+        <button type="button" id="tabBiz" onclick="showTab('biz')" style="padding:10px 28px;border-radius:9px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-sm);transition:all .18s">
+          Negocio
+        </button>
+      </div>
+    </div>
+
+    <!-- ── RESIDENCIAL ── -->
+    <div id="panelRes" class="rv">
+      <!-- Único plan residencial centrado -->
+      <div style="max-width:440px;margin:0 auto">
+        <div class="plan-card featured" style="text-align:left">
+          <div class="plan-badge">Plan único residencial</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7.5L8 2l6 5.5V14a1 1 0 01-1 1H3a1 1 0 01-1-1V7.5z" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 15V9.5h4V15" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="plan-name" style="margin:0">Pure Residencial</div>
+          </div>
+          <div class="plan-price"><span class="plan-num">$369</span><span class="plan-per">/mes</span></div>
+          <div class="plan-desc">Para hogares de hasta 5 personas. Agua de alta calidad directo del grifo, todo el día.</div>
+          <div class="plan-features">
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Simple One instalado sin costo inicial</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>4 etapas de filtración por ósmosis inversa</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Monitoreo IoT 24/7 con app Simple</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento preventivo incluido</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Recambio de cartuchos sin costo extra</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación garantizada en 72 horas</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sin contrato · cancela cuando quieras</div>
+          </div>
+          <a href="simple-landing.html#cotiza" class="btn-plan filled">Cotizar ahora →</a>
+          <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--text-sm)">Sin costo ni compromiso · Respuesta en 24h</div>
+        </div>
+      </div>
+
+      <!-- Why only one plan callout -->
+      <div style="max-width:440px;margin:20px auto 0;background:var(--gray-50);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;display:flex;align-items:flex-start;gap:12px">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="9" cy="9" r="7.5" stroke="#7A97AB" stroke-width="1.3"/><path d="M9 8.5v4M9 6h.01" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <p style="font-size:13px;color:var(--text-sm);line-height:1.6">Un solo plan residencial porque creemos que el acceso a agua de calidad no debería depender de cuánto puedes pagar. Todo el mundo merece lo mismo.</p>
+      </div>
+    </div>
+
+    <!-- ── NEGOCIO ── -->
+    <div id="panelBiz" class="rv" style="display:none">
+      <div class="plans-grid">
+
+        <!-- E1 -->
+        <div class="plan-card">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1" stroke="#7A97AB" stroke-width="1.2"/><path d="M4 2V1a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/><path d="M1 6h12M4.5 6v4M9.5 6v4" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/></svg>
+            <div class="plan-name" style="margin:0">Pure E1</div>
+          </div>
+          <div class="plan-price"><span class="plan-num">$849</span><span class="plan-per">/mes</span></div>
+          <div class="plan-desc">Ideal para oficinas pequeñas o coworkings de hasta 15 personas.</div>
+          <div class="plan-features">
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>1 equipo Simple One empresarial</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>4 etapas de filtración</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Monitoreo IoT + dashboard web</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento preventivo</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Soporte WhatsApp en horario hábil</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación en 72h</div>
+          </div>
+          <a href="simple-landing.html#cotiza" class="btn-plan outline">Cotizar E1</a>
+        </div>
+
+        <!-- E2 — FEATURED -->
+        <div class="plan-card featured">
+          <div class="plan-badge">Más elegido</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1" stroke="#7A97AB" stroke-width="1.2"/><path d="M4 2V1a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/><path d="M1 6h12M4.5 6v4M9.5 6v4" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/></svg>
+            <div class="plan-name" style="margin:0">Pure E2</div>
+          </div>
+          <div class="plan-price"><span class="plan-num">$1,199</span><span class="plan-per">/mes</span></div>
+          <div class="plan-desc">Para empresas medianas, restaurantes u oficinas de 15–40 personas.</div>
+          <div class="plan-features">
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>2 equipos Simple One empresarial</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>4 etapas de filtración premium</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Monitoreo IoT + reportes mensuales</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento preventivo + correctivo</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Soporte prioritario 24/7</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ejecutivo de cuenta asignado</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación express en 48h</div>
+          </div>
+          <a href="simple-landing.html#cotiza" class="btn-plan filled">Cotizar E2</a>
+        </div>
+
+        <!-- E3 -->
+        <div class="plan-card">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1" stroke="#7A97AB" stroke-width="1.2"/><path d="M4 2V1a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/><path d="M1 6h12M4.5 6v4M9.5 6v4" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/></svg>
+            <div class="plan-name" style="margin:0">Pure E3</div>
+          </div>
+          <div class="plan-price"><span class="plan-num">$2,199</span><span class="plan-per">/mes</span></div>
+          <div class="plan-desc">Para corporativos, hoteles o espacios de gran consumo de 40+ personas.</div>
+          <div class="plan-features">
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Equipos ilimitados según necesidad</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Filtración industrial de alta capacidad</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Dashboard corporativo multi-punto</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento correctivo incluido</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>SLA garantizado de respuesta en 4h</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Gerente de cuenta dedicado + reporteo</div>
+          </div>
+          <a href="simple-landing.html#cotiza" class="btn-plan outline">Cotizar E3</a>
+        </div>
+      </div>
+
+      <div class="plans-note" style="margin-top:24px">¿Necesitas más de 3 equipos o una solución personalizada? <a href="simple-landing.html#cotiza" style="color:var(--navy);font-weight:600;text-decoration:underline">Habla con un asesor →</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ FAQ ════════════════════════════════════ -->
+<section class="section bg-gray">
+  <div class="container">
+    <div class="sec-hdr rv" style="text-align:center">
+      <div class="sec-eyebrow" style="justify-content:center">Preguntas frecuentes</div>
+      <h2 class="sec-h2">Lo que más nos preguntan</h2>
+    </div>
+    <div class="faq-wrap rv">
+      <div class="faq-item"><div class="faq-q">¿La ósmosis inversa quita minerales beneficiosos del agua?<div class="faq-ico">+</div></div><div class="faq-a">La membrana de ósmosis inversa remueve tanto contaminantes como algunos minerales. Sin embargo, el proceso de filtración en 4 etapas, incluyendo el post-filtro de carbón de coco, equilibra el pH y mantiene el agua en parámetros óptimos para consumo humano (pH 7.0–7.4, TDS 10–50 ppm).</div></div>
+      <div class="faq-item"><div class="faq-q">¿Cada cuánto tiempo se cambian los cartuchos?<div class="faq-ico">+</div></div><div class="faq-a">Depende del uso y calidad del agua de entrada. El cartucho de sedimentos se recambia cada 6–12 meses, los de carbón cada 6–9 meses, y la membrana de ósmosis inversa cada 2–3 años. El sistema IoT detecta cuándo es necesario y nosotros lo agendamos proactivamente.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Cuánta agua desperdicia el proceso de ósmosis inversa?<div class="faq-ico">+</div></div><div class="faq-a">Los sistemas convencionales desechan 3–5 litros por cada litro purificado. El Simple One usa tecnología de recirculación que reduce este desperdicio significativamente, produciendo una relación cercana a 1:1 en condiciones normales de uso doméstico.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Qué pasa si me mudo o quiero cancelar?<div class="faq-ico">+</div></div><div class="faq-a">Sin problema. Si te mudas dentro de las zonas de servicio, podemos reinstalar el equipo en tu nuevo domicilio sin costo. Si decides cancelar, coordinamos el retiro del Simple One sin cargos adicionales. No hay penalidades ni contratos que cumplir.</div></div>
+      <div class="faq-item"><div class="faq-q">¿El Simple One requiere obra o conexiones especiales?<div class="faq-ico">+</div></div><div class="faq-a">No. El Simple One se conecta a la toma de agua existente bajo el fregadero. No requiere obra civil, solo una conexión estándar. La instalación completa toma aproximadamente 2 horas y nuestras técnicas dejan todo limpio y en orden.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA BANNER ════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="cta-banner rv">
+      <div>
+        <h2 class="cta-h">¿Listo para olvidar el garrafón?</h2>
+        <p class="cta-p">En menos de 24 horas te contactamos con tu cotización personalizada. Sin compromisos, sin contrato.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="simple-landing.html#cotiza" class="btn-sage">
+          Cotizar mi plan ahora
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7.5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <span class="btn-white-ghost">Sin costo · Respuesta en 24h</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="ft-row">
+      <span class="ft-name">simple</span>
+      <div class="ft-links">
+        <a href="simple-landing.html">Inicio</a>
+        <a href="#">Blog</a>
+        <a href="simple-landing.html#cotiza">Cotizar</a>
+        <a href="#">Aviso de Privacidad</a>
+      </div>
+    </div>
+    <div class="ft-copy">© 2025 Colere Water, S.A.P.I. de C.V. · by Junghanns</div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  /* Tab toggle Residencial / Negocio */
+  window.showTab = function(tab) {
+    var res    = document.getElementById('panelRes');
+    var biz    = document.getElementById('panelBiz');
+    var tabRes = document.getElementById('tabRes');
+    var tabBiz = document.getElementById('tabBiz');
+    if (tab === 'res') {
+      res.style.display = 'block'; biz.style.display = 'none';
+      tabRes.style.background = 'var(--navy)'; tabRes.style.color = '#fff';
+      tabBiz.style.background = 'transparent'; tabBiz.style.color = 'var(--text-sm)';
+    } else {
+      biz.style.display = 'block'; res.style.display = 'none';
+      tabBiz.style.background = 'var(--navy)'; tabBiz.style.color = '#fff';
+      tabRes.style.background = 'transparent'; tabRes.style.color = 'var(--text-sm)';
+    }
+  };
+
+  /* FAQ */
+  document.querySelectorAll('.faq-q').forEach(function(q) {
+    q.addEventListener('click', function() {
+      var item = q.closest('.faq-item');
+      var open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+      if (!open) item.classList.add('open');
+    });
+  });
+  /* Reveal */
+  var obs = new IntersectionObserver(function(es) {
+    es.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
+});
+</script>
+</body>
+</html>
