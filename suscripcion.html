@@ -327,6 +327,130 @@ footer { background: var(--navy); padding: 40px 0 28px; border-top: 1px solid rg
 
 <div style="padding-top:80px"></div>
 
+<!-- ══ PLANES ══════════════════════════════ -->
+<section class="section" id="planes">
+  <div class="container">
+    <div class="sec-hdr rv" style="text-align:center">
+      <div class="sec-eyebrow" style="justify-content:center">Precios y planes</div>
+      <h2 class="sec-h2">Elige el plan que se adapta a ti</h2>
+      <p class="sec-p" style="margin:0 auto;text-align:center">Sin contrato forzoso. Sin costos de instalación. Todo incluido en un pago mensual fijo.</p>
+    </div>
+
+    <!-- Toggle residencial / negocio -->
+    <div style="display:flex;justify-content:center;margin:36px 0 40px">
+      <div style="display:inline-flex;background:var(--gray-100);border-radius:12px;padding:4px;gap:4px">
+        <button type="button" id="tabRes" onclick="showTab('res')" style="padding:10px 28px;border-radius:9px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:var(--navy);color:#fff;transition:all .18s">
+          Residencial
+        </button>
+        <button type="button" id="tabBiz" onclick="showTab('biz')" style="padding:10px 28px;border-radius:9px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-sm);transition:all .18s">
+          Negocio
+        </button>
+      </div>
+    </div>
+
+    <!-- ── RESIDENCIAL ── -->
+    <div id="panelRes" class="rv">
+      <!-- Único plan residencial centrado -->
+      <div style="max-width:440px;margin:0 auto">
+        <div class="plan-card featured" style="text-align:left">
+          <div class="plan-badge">Plan único residencial</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7.5L8 2l6 5.5V14a1 1 0 01-1 1H3a1 1 0 01-1-1V7.5z" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 15V9.5h4V15" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="plan-name" style="margin:0">Pure Residencial</div>
+          </div>
+          <div class="plan-price"><span class="plan-num">$369</span><span class="plan-per">/mes</span></div>
+          <div class="plan-desc">Para hogares de hasta 5 personas. Agua de alta calidad directo del grifo, todo el día.</div>
+          <div class="plan-features">
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Simple One instalado sin costo inicial</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>4 etapas de filtración por ósmosis inversa</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Monitoreo IoT 24/7 con app Simple</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento preventivo incluido</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Recambio de cartuchos sin costo extra</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación garantizada en 72 horas</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sin contrato · cancela cuando quieras</div>
+          </div>
+          <a href="index.html#cotiza" class="btn-plan filled">Cotizar ahora →</a>
+          <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--text-sm)">Sin costo ni compromiso · Respuesta en 24h</div>
+        </div>
+      </div>
+
+      <!-- Why only one plan callout -->
+      <div style="max-width:440px;margin:20px auto 0;background:var(--gray-50);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;display:flex;align-items:flex-start;gap:12px">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="9" cy="9" r="7.5" stroke="#7A97AB" stroke-width="1.3"/><path d="M9 8.5v4M9 6h.01" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <p style="font-size:13px;color:var(--text-sm);line-height:1.6">Un solo plan residencial porque creemos que el acceso a agua de calidad no debería depender de cuánto puedes pagar. Todo el mundo merece lo mismo.</p>
+      </div>
+    </div>
+
+    <!-- ── NEGOCIO ── -->
+    <div id="panelBiz" class="rv" style="display:none">
+      <div class="plans-grid">
+
+        <!-- E1 -->
+        <div class="plan-card">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1" stroke="#7A97AB" stroke-width="1.2"/><path d="M4 2V1a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/><path d="M1 6h12M4.5 6v4M9.5 6v4" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/></svg>
+            <div class="plan-name" style="margin:0">Pure E1</div>
+          </div>
+          <div class="plan-price"><span class="plan-num">$849</span><span class="plan-per">/mes</span></div>
+          <div class="plan-desc">Ideal para oficinas pequeñas o coworkings de hasta 15 personas.</div>
+          <div class="plan-features">
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>1 equipo Simple One empresarial</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>4 etapas de filtración</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Monitoreo IoT + dashboard web</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento preventivo</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Soporte WhatsApp en horario hábil</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación en 72h</div>
+          </div>
+          <a href="index.html#cotiza" class="btn-plan outline">Cotizar E1</a>
+        </div>
+
+        <!-- E2 — FEATURED -->
+        <div class="plan-card featured">
+          <div class="plan-badge">Más elegido</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1" stroke="#7A97AB" stroke-width="1.2"/><path d="M4 2V1a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/><path d="M1 6h12M4.5 6v4M9.5 6v4" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/></svg>
+            <div class="plan-name" style="margin:0">Pure E2</div>
+          </div>
+          <div class="plan-price"><span class="plan-num">$1,199</span><span class="plan-per">/mes</span></div>
+          <div class="plan-desc">Para empresas medianas, restaurantes u oficinas de 15–40 personas.</div>
+          <div class="plan-features">
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>2 equipos Simple One empresarial</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>4 etapas de filtración premium</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Monitoreo IoT + reportes mensuales</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento preventivo + correctivo</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Soporte prioritario 24/7</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ejecutivo de cuenta asignado</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación express en 48h</div>
+          </div>
+          <a href="index.html#cotiza" class="btn-plan filled">Cotizar E2</a>
+        </div>
+
+        <!-- E3 -->
+        <div class="plan-card">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1" stroke="#7A97AB" stroke-width="1.2"/><path d="M4 2V1a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/><path d="M1 6h12M4.5 6v4M9.5 6v4" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/></svg>
+            <div class="plan-name" style="margin:0">Pure E3</div>
+          </div>
+          <div class="plan-price"><span class="plan-num">$2,199</span><span class="plan-per">/mes</span></div>
+          <div class="plan-desc">Para corporativos, hoteles o espacios de gran consumo de 40+ personas.</div>
+          <div class="plan-features">
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Equipos ilimitados según necesidad</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Filtración industrial de alta capacidad</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Dashboard corporativo multi-punto</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento correctivo incluido</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>SLA garantizado de respuesta en 4h</div>
+            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Gerente de cuenta dedicado + reporteo</div>
+          </div>
+          <a href="index.html#cotiza" class="btn-plan outline">Cotizar E3</a>
+        </div>
+      </div>
+
+      <div class="plans-note" style="margin-top:24px">¿Necesitas más de 3 equipos o una solución personalizada? <a href="index.html#cotiza" style="color:var(--navy);font-weight:600;text-decoration:underline">Habla con un asesor →</a></div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ══ FEATURE ROW 1 — IoT ══════════════════ -->
 <div class="container">
   <div class="feat-row rv">
@@ -475,130 +599,6 @@ footer { background: var(--navy); padding: 40px 0 28px; border-top: 1px solid rg
       <div class="result-div"></div>
       <div class="result-item"><div class="result-num">7.2</div><div class="result-lbl">pH promedio óptimo para consumo</div></div>
     </div>
-  </div>
-</section>
-
-<!-- ══ PLANES ══════════════════════════════ -->
-<section class="section" id="planes">
-  <div class="container">
-    <div class="sec-hdr rv" style="text-align:center">
-      <div class="sec-eyebrow" style="justify-content:center">Precios y planes</div>
-      <h2 class="sec-h2">Elige el plan que se adapta a ti</h2>
-      <p class="sec-p" style="margin:0 auto;text-align:center">Sin contrato forzoso. Sin costos de instalación. Todo incluido en un pago mensual fijo.</p>
-    </div>
-
-    <!-- Toggle residencial / negocio -->
-    <div style="display:flex;justify-content:center;margin:36px 0 40px">
-      <div style="display:inline-flex;background:var(--gray-100);border-radius:12px;padding:4px;gap:4px">
-        <button type="button" id="tabRes" onclick="showTab('res')" style="padding:10px 28px;border-radius:9px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:var(--navy);color:#fff;transition:all .18s">
-          Residencial
-        </button>
-        <button type="button" id="tabBiz" onclick="showTab('biz')" style="padding:10px 28px;border-radius:9px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--text-sm);transition:all .18s">
-          Negocio
-        </button>
-      </div>
-    </div>
-
-    <!-- ── RESIDENCIAL ── -->
-    <div id="panelRes" class="rv">
-      <!-- Único plan residencial centrado -->
-      <div style="max-width:440px;margin:0 auto">
-        <div class="plan-card featured" style="text-align:left">
-          <div class="plan-badge">Plan único residencial</div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7.5L8 2l6 5.5V14a1 1 0 01-1 1H3a1 1 0 01-1-1V7.5z" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 15V9.5h4V15" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <div class="plan-name" style="margin:0">Pure Residencial</div>
-          </div>
-          <div class="plan-price"><span class="plan-num">$369</span><span class="plan-per">/mes</span></div>
-          <div class="plan-desc">Para hogares de hasta 5 personas. Agua de alta calidad directo del grifo, todo el día.</div>
-          <div class="plan-features">
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Simple One instalado sin costo inicial</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>4 etapas de filtración por ósmosis inversa</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Monitoreo IoT 24/7 con app Simple</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento preventivo incluido</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Recambio de cartuchos sin costo extra</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación garantizada en 72 horas</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Sin contrato · cancela cuando quieras</div>
-          </div>
-          <a href="index.html#cotiza" class="btn-plan filled">Cotizar ahora →</a>
-          <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--text-sm)">Sin costo ni compromiso · Respuesta en 24h</div>
-        </div>
-      </div>
-
-      <!-- Why only one plan callout -->
-      <div style="max-width:440px;margin:20px auto 0;background:var(--gray-50);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;display:flex;align-items:flex-start;gap:12px">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="9" cy="9" r="7.5" stroke="#7A97AB" stroke-width="1.3"/><path d="M9 8.5v4M9 6h.01" stroke="#7A97AB" stroke-width="1.3" stroke-linecap="round"/></svg>
-        <p style="font-size:13px;color:var(--text-sm);line-height:1.6">Un solo plan residencial porque creemos que el acceso a agua de calidad no debería depender de cuánto puedes pagar. Todo el mundo merece lo mismo.</p>
-      </div>
-    </div>
-
-    <!-- ── NEGOCIO ── -->
-    <div id="panelBiz" class="rv" style="display:none">
-      <div class="plans-grid">
-
-        <!-- E1 -->
-        <div class="plan-card">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1" stroke="#7A97AB" stroke-width="1.2"/><path d="M4 2V1a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/><path d="M1 6h12M4.5 6v4M9.5 6v4" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/></svg>
-            <div class="plan-name" style="margin:0">Pure E1</div>
-          </div>
-          <div class="plan-price"><span class="plan-num">$849</span><span class="plan-per">/mes</span></div>
-          <div class="plan-desc">Ideal para oficinas pequeñas o coworkings de hasta 15 personas.</div>
-          <div class="plan-features">
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>1 equipo Simple One empresarial</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>4 etapas de filtración</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Monitoreo IoT + dashboard web</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento preventivo</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Soporte WhatsApp en horario hábil</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación en 72h</div>
-          </div>
-          <a href="index.html#cotiza" class="btn-plan outline">Cotizar E1</a>
-        </div>
-
-        <!-- E2 — FEATURED -->
-        <div class="plan-card featured">
-          <div class="plan-badge">Más elegido</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1" stroke="#7A97AB" stroke-width="1.2"/><path d="M4 2V1a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/><path d="M1 6h12M4.5 6v4M9.5 6v4" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/></svg>
-            <div class="plan-name" style="margin:0">Pure E2</div>
-          </div>
-          <div class="plan-price"><span class="plan-num">$1,199</span><span class="plan-per">/mes</span></div>
-          <div class="plan-desc">Para empresas medianas, restaurantes u oficinas de 15–40 personas.</div>
-          <div class="plan-features">
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>2 equipos Simple One empresarial</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>4 etapas de filtración premium</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Monitoreo IoT + reportes mensuales</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento preventivo + correctivo</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Soporte prioritario 24/7</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Ejecutivo de cuenta asignado</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Instalación express en 48h</div>
-          </div>
-          <a href="index.html#cotiza" class="btn-plan filled">Cotizar E2</a>
-        </div>
-
-        <!-- E3 -->
-        <div class="plan-card">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1" stroke="#7A97AB" stroke-width="1.2"/><path d="M4 2V1a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/><path d="M1 6h12M4.5 6v4M9.5 6v4" stroke="#7A97AB" stroke-width="1.1" stroke-linecap="round"/></svg>
-            <div class="plan-name" style="margin:0">Pure E3</div>
-          </div>
-          <div class="plan-price"><span class="plan-num">$2,199</span><span class="plan-per">/mes</span></div>
-          <div class="plan-desc">Para corporativos, hoteles o espacios de gran consumo de 40+ personas.</div>
-          <div class="plan-features">
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Equipos ilimitados según necesidad</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Filtración industrial de alta capacidad</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Dashboard corporativo multi-punto</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Mantenimiento correctivo incluido</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>SLA garantizado de respuesta en 4h</div>
-            <div class="plan-feat"><div class="plan-feat-ico"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#A3A983" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Gerente de cuenta dedicado + reporteo</div>
-          </div>
-          <a href="index.html#cotiza" class="btn-plan outline">Cotizar E3</a>
-        </div>
-      </div>
-
-      <div class="plans-note" style="margin-top:24px">¿Necesitas más de 3 equipos o una solución personalizada? <a href="index.html#cotiza" style="color:var(--navy);font-weight:600;text-decoration:underline">Habla con un asesor →</a></div>
-    </div>
-
   </div>
 </section>
 
